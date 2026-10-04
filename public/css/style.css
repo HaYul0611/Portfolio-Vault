@@ -343,17 +343,18 @@ img {
   display: flex;
   align-items: flex-start;
   gap: 0;
-  margin-top: -16px;
-  padding-top: 24px;
-  padding-bottom: 16px;
+  padding-top: 20px;
+  padding-bottom: 24px;
   overflow-x: auto;
+  overflow-y: visible;
 }
 
 .timeline-item {
   flex: 1;
   min-width: 140px;
   position: relative;
-  padding-top: 24px;
+  padding-top: 32px;
+  padding-right: 16px;
   transition: transform var(--transition);
 }
 
@@ -361,15 +362,20 @@ img {
   transform: translateY(-4px);
 }
 
+.timeline-item:focus {
+  outline: none;
+}
+
 .timeline-dot {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   background: var(--text-muted);
   position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1;
+  top: 10px;
+  left: 4px;
+  z-index: 2;
+  box-sizing: border-box;
 }
 
 .timeline-item.done .timeline-dot {
@@ -377,9 +383,8 @@ img {
 }
 
 .timeline-item.current .timeline-dot {
-  background: var(--text);
-  box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px var(--text);
-  animation: dotPulse 2s infinite ease-in-out;
+  background: #2ecc71;
+  box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px #2ecc71;
 }
 
 .timeline-item.goal .timeline-dot {
@@ -390,9 +395,9 @@ img {
 .timeline-item:not(:last-child)::after {
   content: "";
   position: absolute;
-  top: 4px;
-  left: 8px;
-  width: calc(100% - 8px);
+  top: 14px;
+  left: 14px;
+  width: calc(100% - 14px);
   height: 1px;
   background: var(--border);
 }
@@ -1700,7 +1705,7 @@ a.evidence-item {
 .current-pulse {
   background: #2ecc71 !important;
   box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px #2ecc71 !important;
-  animation: currentDotPulse 2s infinite ease-in-out !important;
+  animation: currentDotPulse 2.4s infinite ease-in-out !important;
 }
 
 @keyframes currentDotPulse {
@@ -1729,12 +1734,10 @@ a.evidence-item {
 }
 
 .timeline-item {
-  cursor: pointer !important;
+  cursor: default;
 }
-
 .timeline-item:focus {
-  outline: 1px dashed var(--text-mid);
-  outline-offset: 4px;
+  outline: none;
 }
 
 /* 프로젝트 인터랙티브 필터 */
@@ -1781,34 +1784,6 @@ a.evidence-item {
   display: none !important;
 }
 
-/* Vision 아키텍처 연구 분야 지정 버튼 */
-.detail-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 14px;
-  padding-top: 12px;
-  border-top: 0.5px solid var(--border);
-}
-
-.focus-action-btn {
-  font-size: 11px !important;
-  padding: 5px 12px !important;
-  height: 30px !important;
-  letter-spacing: 0.2px;
-}
-
-.node-focus-tag {
-  font-size: 9px;
-  padding: 1px 4px;
-  border-radius: 2px;
-  background: #2ecc71;
-  color: #fff;
-  font-weight: 700;
-  margin-left: 4px;
-}
 
 /* Vault 통계 및 정렬 바 */
 .notes-header-left {
