@@ -74,6 +74,35 @@ router.patch('/:id', async function(req, res) {
   res.json(result.data);
 });
 
+/* 카테고리 이름 변경 (해당 사용자의 해당 카테고리 메모 일괄 업데이트) */
+router.patch('/categories/rename', async function(req, res) {
+  var oldCat = (req.body.oldCategory || '').trim();
+  var newCat = (req.body.newCategory || '').trim();
+  if (!oldCat || !newCat) return res.status(400).json({ error: '변경 전/후 카테고리 이름이 필요합니다.' });
+
+  var result = await db.from('vault_notes')
+    .update({ category: newCat })
+    .eq('user_id', req.session.userId)
+    .eq('category', oldCat)
+    .select();
+
+  res.json({ ok: true, count: result.data ? result.data.length : 0 });
+});
+
+/* 카테고리 삭제 (해당 카테고리 메모들을 기본 '일반' 카테고리로 이동) */
+router.delete('/categories/:name', async function(req, res) {
+  var catName = (req.params.name || '').trim();
+  if (!catName) return res.status(400).json({ error: '카테고리 이름이 필요합니다.' });
+
+  var result = await db.from('vault_notes')
+    .update({ category: '일반' })
+    .eq('user_id', req.session.userId)
+    .eq('category', catName)
+    .select();
+
+  res.json({ ok: true, movedCount: result.data ? result.data.length : 0 });
+});
+
 /* 삭제 — 본인 것만 */
 router.delete('/:id', async function(req, res) {
   await db.from('vault_notes').delete()

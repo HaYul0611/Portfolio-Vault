@@ -50,17 +50,93 @@ var Vault = (function() {
     var filterEl = document.getElementById('categoryFilter');
     if (!filterEl) return;
     var cats = ['ALL'].concat(getAllCategories());
-    filterEl.innerHTML = cats.map(function(c) {
+    var chipsHtml = cats.map(function(c) {
       var isAct = (c === activeCategory) ? ' active' : '';
       var label = (c === 'ALL') ? '전체 보기' : esc(c);
       return '<button type="button" class="cat-chip' + isAct + '" onclick="Vault.setFilter(\'' + esc(c).replace(/'/g, "\\'") + '\')">' + label + '</button>';
     }).join('');
+
+    chipsHtml += '<button type="button" class="cat-chip" style="margin-left:auto;border-style:dashed;color:var(--text)" onclick="Vault.showManageCategories()">⚙ 카테고리 관리</button>';
+
+    filterEl.innerHTML = chipsHtml;
   }
 
   function setFilter(cat) {
     activeCategory = cat;
     renderFilterBar();
     renderNotesList();
+  }
+
+  /* 카테고리 관리 모달 (조회, 이름변경, 삭제, 새 카테고리 추가) */
+  function showManageCategories() {
+    var cats = getAllCategories();
+    var listHtml = cats.map(function(c) {
+      var count = cachedNotes.filter(function(n) { return (n.category || '').trim() === c; }).length;
+      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:0.5px solid var(--border)">' +
+        '<div><strong>' + esc(c) + '</strong> <span style="font-size:12px;color:var(--text-light)">(' + count + '개 메모)</span></div>' +
+        '<div style="display:flex;gap:6px">' +
+          '<button class="v-btn outline sm" onclick="Vault.renameCategory(\'' + esc(c).replace(/'/g, "\\'") + '\')">이름변경</button>' +
+          '<button class="v-btn danger sm" onclick="Vault.deleteCategory(\'' + esc(c).replace(/'/g, "\\'") + '\')">삭제</button>' +
+        '</div></div>';
+    }).join('');
+
+    var modalHtml = '<div style="margin-bottom:20px">' +
+      '<p style="font-size:13px;color:var(--text-mid);margin-bottom:14px">카테고리 이름을 변경하면 해당 메모들이 일괄 업데이트되며, 카테고리를 삭제하면 속한 메모는 \'일반\' 카테고리로 안전 이동됩니다.</p>' +
+      '<div style="max-height:220px;overflow-y:auto;margin-bottom:20px">' + listHtml + '</div>' +
+      '<div style="border-top:0.5px solid var(--border);padding-top:16px">' +
+        '<label style="display:block;font-size:12px;font-weight:600;margin-bottom:6px">새 카테고리 생성</label>' +
+        '<div style="display:flex;gap:8px">' +
+          '<input type="text" id="newCategoryInputName" class="v-input" placeholder="새 카테고리 이름">' +
+          '<button type="button" class="v-btn primary sm" onclick="Vault.createNewCategory()" style="white-space:nowrap">생성</button>' +
+        '</div>' +
+      '</div></div>';
+
+    openModal('카테고리 관리', modalHtml);
+  }
+
+  async function renameCategory(oldCat) {
+    var newCat = prompt('카테고리 새 이름을 입력하세요:', oldCat);
+    if (!newCat || newCat.trim() === '' || newCat.trim() === oldCat) return;
+    await api('/api/notes/categories/rename', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ oldCategory: oldCat, newCategory: newCat.trim() })
+    });
+    closeModal();
+    await loadNotes();
+    showManageCategories();
+  }
+
+  async function deleteCategory(catName) {
+    if (!confirm('정말 \'' + catName + '\' 카테고리를 삭제할까요?\n(속한 메모는 \'일반\' 카테고리로 안전 이동됩니다)')) return;
+    await api('/api/notes/categories/' + encodeURIComponent(catName), {
+      method: 'DELETE'
+    });
+    closeModal();
+    await loadNotes();
+    showManageCategories();
+  }
+
+  async function createNewCategory() {
+    var input = document.getElementById('newCategoryInputName');
+    if (!input || !input.value.trim()) {
+      alert('카테고리 이름을 입력해주세요.');
+      return;
+    }
+    var newCat = input.value.trim();
+    /* 해당 카테고리로 기본 안내 메모 생성하여 즉시 DB CRUD 반영 */
+    await api('/api/notes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        category: newCat,
+        title: newCat + ' 시작하기',
+        content: '새로 생성된 ' + newCat + ' 카테고리의 첫 번째 비공개 메모입니다.'
+      })
+    });
+    closeModal();
+    await loadNotes();
+    alert('\'' + newCat + '\' 카테고리가 성공적으로 생성되었습니다!');
   }
 
   /* 비공개 메모 화면 렌더링 */
@@ -277,6 +353,10 @@ var Vault = (function() {
     renameKey: renameKey,
     deleteKey: deleteKey,
     setFilter: setFilter,
-    onCatSelectChange: onCatSelectChange
+    onCatSelectChange: onCatSelectChange,
+    showManageCategories: showManageCategories,
+    renameCategory: renameCategory,
+    deleteCategory: deleteCategory,
+    createNewCategory: createNewCategory
   };
 })();
