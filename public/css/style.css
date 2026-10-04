@@ -1449,3 +1449,262 @@ a.evidence-item {
     animation: none !important;
   }
 }
+
+
+/* === 동적 UI 고도화 스타일 === */
+
+/* 1. Vault 사용자 정보 및 펄스 뱃지 */
+.vault-user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.vault-user-badge {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #5cb85c;
+  box-shadow: 0 0 0 0 rgba(92, 184, 92, 0.7);
+  animation: liveBadgePulse 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
+  flex-shrink: 0;
+}
+
+@keyframes liveBadgePulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(92, 184, 92, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(92, 184, 92, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(92, 184, 92, 0);
+  }
+}
+
+.vault-security-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border: 0.5px solid var(--border);
+  border-radius: 12px;
+  font-size: 11px;
+  color: var(--text-light);
+  background: rgba(0, 0, 0, 0.02);
+  letter-spacing: 0.2px;
+  transition: all var(--transition);
+}
+
+.vault-security-pill:hover {
+  border-color: var(--text-mid);
+  color: var(--text);
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.vault-shield-icon {
+  width: 12px;
+  height: 12px;
+  stroke: #5cb85c;
+}
+
+/* 2. Vision 인터랙티브 파이프라인 */
+.vision-pipeline-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.vision-diagram {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.vision-node {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border: 0.5px solid var(--border);
+  background: transparent;
+  font-size: 13px;
+  color: var(--text-mid);
+  cursor: pointer;
+  font-family: inherit;
+  border-radius: 2px;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+
+.vision-node:hover {
+  border-color: var(--text);
+  color: var(--text);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.vision-node.active {
+  background: var(--text);
+  color: var(--bg);
+  border-color: var(--text);
+  font-weight: 600;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+}
+
+.node-step {
+  font-size: 11px;
+  font-weight: 700;
+  opacity: 0.7;
+}
+
+.vision-arrow {
+  position: relative;
+  width: 24px;
+  height: 1px;
+  background: var(--border);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.signal-dot {
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 8px;
+  height: 3px;
+  background: var(--text);
+  border-radius: 2px;
+  animation: signalFlow 1.6s infinite ease-in-out;
+}
+
+@keyframes signalFlow {
+  0% { left: -8px; opacity: 0; }
+  30% { opacity: 1; }
+  100% { left: 100%; opacity: 0; }
+}
+
+.vision-detail-card {
+  border: 0.5px solid var(--border);
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.01);
+  border-radius: 2px;
+  transition: opacity 0.2s, transform 0.2s;
+  animation: cardFadeIn 0.3s ease-out;
+}
+
+.detail-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.detail-badge {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--bg);
+  background: var(--text);
+  padding: 3px 8px;
+  border-radius: 2px;
+}
+
+.detail-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0;
+}
+
+.detail-desc {
+  font-size: 13px;
+  color: var(--text-mid);
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+
+.detail-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.detail-tag {
+  font-size: 11px;
+  padding: 3px 10px;
+  border: 0.5px solid var(--border);
+  color: var(--text-light);
+  background: var(--bg);
+  border-radius: 12px;
+}
+
+/* 3. Timeline 동적 고도화 */
+.timeline-item {
+  transition: transform var(--transition), border-color var(--transition);
+  cursor: default;
+}
+
+.timeline-item:hover {
+  transform: translateY(-4px);
+}
+
+.timeline-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 10px;
+}
+
+.time-tag {
+  display: inline-block;
+  font-size: 10px;
+  padding: 2px 7px;
+  border: 0.5px solid var(--border);
+  color: var(--text-light);
+  border-radius: 2px;
+  white-space: nowrap;
+  background: var(--bg);
+  transition: all var(--transition);
+}
+
+.time-tag:hover {
+  border-color: var(--text);
+  color: var(--text);
+}
+
+.time-tag.highlight {
+  border-color: var(--text);
+  color: var(--text);
+  font-weight: 600;
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.current-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  color: #fff;
+  background: #2ecc71;
+  padding: 1px 6px;
+  border-radius: 8px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.current-pulse {
+  background: #2ecc71 !important;
+  box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px #2ecc71 !important;
+  animation: currentDotPulse 2s infinite ease-in-out !important;
+}
+
+@keyframes currentDotPulse {
+  0% { box-shadow: 0 0 0 3px var(--bg), 0 0 0 4px #2ecc71; }
+  50% { box-shadow: 0 0 0 3px var(--bg), 0 0 0 8px rgba(46, 204, 113, 0.4), 0 0 12px rgba(46, 204, 113, 0.3); }
+  100% { box-shadow: 0 0 0 3px var(--bg), 0 0 0 4px #2ecc71; }
+}

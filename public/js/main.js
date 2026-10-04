@@ -151,3 +151,84 @@
     document.documentElement.style.setProperty('--transition', '0.01ms');
   }
 })();
+
+
+/* ===========================
+   Vision Interactive Pipeline (비전 아키텍처 인터랙션)
+   =========================== */
+(function initVisionPipeline() {
+  var nodes = document.querySelectorAll('.vision-node');
+  var badge = document.getElementById('visionStepBadge');
+  var title = document.getElementById('visionStepTitle');
+  var desc = document.getElementById('visionStepDesc');
+  var tags = document.getElementById('visionStepTags');
+
+  if (!nodes.length || !badge || !title || !desc || !tags) return;
+
+  var stepData = [
+    {
+      badge: 'STEP 01 · 수집 및 센싱',
+      title: '네트워크 모니터링 (Network Traffic Sensing)',
+      desc: '서버 및 엔드포인트 전반의 인프라 트래픽을 저지연 커널 레벨(eBPF / Suricata)에서 실시간 캡처하여 프로토콜 흐름, 패킷 메타데이터, 비정상 세션 징후를 센싱합니다.',
+      tags: ['eBPF', 'Packet Analysis', 'Network Sensing', 'Traffic Flow']
+    },
+    {
+      badge: 'STEP 02 · 핵심 머신러닝 분석',
+      title: 'AI 실시간 분석 (Real-time Anomaly Detection)',
+      desc: '수집된 로그와 네트워크 벡터를 사전 학습된 비지도 학습 머신러닝 모델(Isolation Forest / AutoEncoder)로 실시간 추론하여 기존 시그니처로 잡히지 않는 제로데이 위협 패턴을 식별합니다.',
+      tags: ['Machine Learning', 'Anomaly Detection', 'AutoEncoder', 'Real-time Inference']
+    },
+    {
+      badge: 'STEP 03 · 자동화된 방어',
+      title: '위협 탐지 · 대응 (Automated SOAR Defense)',
+      desc: '식별된 이상 지표를 위협 인텔리전스와 대조하고, 침해 위험도가 높은 세션이나 IP를 방화벽 룰셋에 즉시 자동 반영하여 세션을 격리하고 보안 담당자에게 실시간 경보를 전송합니다.',
+      tags: ['SOAR Automation', 'Threat Response', 'Session Isolation', 'Firewall Policy']
+    },
+    {
+      badge: 'STEP 04 · 인프라 통합 배포',
+      title: '기업 맞춤 배포 (Enterprise Cloud Delivery)',
+      desc: '온프레미스 레거시 서버부터 Kubernetes, AWS/클라우드 환경까지 경량 컨테이너(Docker) 기반 에이전트로 패키징하여 고객사 인프라에 최소 리소스로 즉시 배포할 수 있도록 최적화합니다.',
+      tags: ['Docker', 'Kubernetes', 'Cloud Infrastructure', 'Production Ready']
+    }
+  ];
+
+  function setActiveStep(idx) {
+    nodes.forEach(function (n, i) {
+      if (i === idx) {
+        n.classList.add('active');
+        n.setAttribute('aria-selected', 'true');
+      } else {
+        n.classList.remove('active');
+        n.setAttribute('aria-selected', 'false');
+      }
+    });
+
+    var data = stepData[idx];
+    if (!data) return;
+
+    var card = document.getElementById('visionDetailCard');
+    if (card) {
+      card.style.opacity = '0.4';
+      card.style.transform = 'translateY(3px)';
+      setTimeout(function () {
+        badge.textContent = data.badge;
+        title.textContent = data.title;
+        desc.textContent = data.desc;
+        tags.innerHTML = data.tags.map(function (t) {
+          return '<span class="detail-tag">' + t + '</span>';
+        }).join('');
+        card.style.opacity = '1';
+        card.style.transform = 'translateY(0)';
+      }, 120);
+    }
+  }
+
+  nodes.forEach(function (node) {
+    node.addEventListener('click', function () {
+      var step = parseInt(this.getAttribute('data-step'), 10);
+      if (!isNaN(step)) {
+        setActiveStep(step);
+      }
+    });
+  });
+})();

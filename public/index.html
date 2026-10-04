@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261005_05">
+  <link rel="stylesheet" href="css/style.css?v=20261005_06">
 </head>
 
 <body>
@@ -146,30 +146,50 @@
     <section class="timeline-section" aria-label="경력 전환 타임라인">
       <h2 class="section-title">Timeline</h2>
       <p class="section-slash" aria-hidden="true">/</p>
-      <div class="timeline">
-        <div class="timeline-item past">
+      <div class="timeline" id="careerTimeline">
+        <div class="timeline-item past" tabindex="0">
           <span class="timeline-dot" aria-hidden="true"></span>
           <p class="timeline-period">2019.12 ~ 2026.01</p>
           <p class="timeline-title">병원 행정</p>
           <p class="timeline-desc">원무 · 행정 중간관리자<br>프로세스 개선 · 민원 관리</p>
+          <div class="timeline-tags">
+            <span class="time-tag">인수인계 전산화</span>
+            <span class="time-tag">의료정보 관리</span>
+            <span class="time-tag">매뉴얼 표준화</span>
+          </div>
         </div>
-        <div class="timeline-item done">
+        <div class="timeline-item done" tabindex="0">
           <span class="timeline-dot" aria-hidden="true"></span>
           <p class="timeline-period">25.12 ~ 26.06</p>
           <p class="timeline-title">웹 풀스택 이수</p>
           <p class="timeline-desc">AI 기반 바이브코딩<br>웹 풀스택 개발 과정</p>
+          <div class="timeline-tags">
+            <span class="time-tag">Node.js · Express</span>
+            <span class="time-tag">MySQL · Supabase</span>
+            <span class="time-tag">REST API · JWT</span>
+          </div>
         </div>
-        <div class="timeline-item current">
-          <span class="timeline-dot" aria-hidden="true"></span>
-          <p class="timeline-period">26.08 ~</p>
+        <div class="timeline-item current active-track" tabindex="0">
+          <span class="timeline-dot current-pulse" aria-hidden="true"></span>
+          <p class="timeline-period">26.08 ~ <span class="current-badge">Active</span></p>
           <p class="timeline-title">인프라 · 보안</p>
           <p class="timeline-desc">SKT ALEPH<br>네트워크 · 서버 · 클라우드</p>
+          <div class="timeline-tags">
+            <span class="time-tag highlight">WebAuthn / FIDO2</span>
+            <span class="time-tag highlight">인프라 보안 감지</span>
+            <span class="time-tag highlight">Linux · Network</span>
+          </div>
         </div>
-        <div class="timeline-item goal">
+        <div class="timeline-item goal" tabindex="0">
           <span class="timeline-dot" aria-hidden="true"></span>
           <p class="timeline-period">목표</p>
           <p class="timeline-title">보안 엔지니어</p>
           <p class="timeline-desc">AI 기반 실시간<br>보안 감지 시스템 구축</p>
+          <div class="timeline-tags">
+            <span class="time-tag">AI 위협 탐지</span>
+            <span class="time-tag">SOAR 대응 자동화</span>
+            <span class="time-tag">클라우드 인프라 보안</span>
+          </div>
         </div>
       </div>
     </section>
@@ -289,20 +309,48 @@
 
     <hr class="divider">
 
-    <!-- 목표 비전 섹션 -->
+    <!-- 목표 비전 섹션 (인터랙티브 파이프라인) -->
     <section class="vision" aria-label="목표 비전">
       <h2 class="section-title">Vision</h2>
       <p class="section-slash" aria-hidden="true">/</p>
       <div class="vision-content">
         <p class="vision-statement">AI 기반 실시간 인프라 보안 감지 시스템을 구축하여,<br>기업 환경에 맞게 활용할 수 있는 보안 솔루션을 만드는 것이 목표입니다.</p>
-        <div class="vision-diagram" aria-label="보안 시스템 구조 키워드">
-          <div class="vision-node">네트워크 모니터링</div>
-          <div class="vision-arrow" aria-hidden="true"></div>
-          <div class="vision-node accent">AI 실시간 분석</div>
-          <div class="vision-arrow" aria-hidden="true"></div>
-          <div class="vision-node">위협 탐지 · 대응</div>
-          <div class="vision-arrow" aria-hidden="true"></div>
-          <div class="vision-node">기업 맞춤 배포</div>
+        <div class="vision-pipeline-wrap">
+          <div class="vision-diagram" id="visionDiagram" role="tablist" aria-label="보안 시스템 파이프라인 단계">
+            <button type="button" class="vision-node" data-step="0" role="tab" aria-selected="false">
+              <span class="node-step">01</span>
+              <span class="node-title">네트워크 모니터링</span>
+            </button>
+            <div class="vision-arrow" aria-hidden="true"><span class="signal-dot"></span></div>
+            <button type="button" class="vision-node active" data-step="1" role="tab" aria-selected="true">
+              <span class="node-step">02</span>
+              <span class="node-title">AI 실시간 분석</span>
+            </button>
+            <div class="vision-arrow" aria-hidden="true"><span class="signal-dot"></span></div>
+            <button type="button" class="vision-node" data-step="2" role="tab" aria-selected="false">
+              <span class="node-step">03</span>
+              <span class="node-title">위협 탐지 · 대응</span>
+            </button>
+            <div class="vision-arrow" aria-hidden="true"><span class="signal-dot"></span></div>
+            <button type="button" class="vision-node" data-step="3" role="tab" aria-selected="false">
+              <span class="node-step">04</span>
+              <span class="node-title">기업 맞춤 배포</span>
+            </button>
+          </div>
+
+          <div class="vision-detail-card" id="visionDetailCard" aria-live="polite">
+            <div class="detail-header">
+              <span class="detail-badge" id="visionStepBadge">STEP 02 · 핵심 아키텍처</span>
+              <h4 class="detail-title" id="visionStepTitle">AI 실시간 분석 (Real-time Anomaly Detection)</h4>
+            </div>
+            <p class="detail-desc" id="visionStepDesc">수집된 패킷 및 시스템 로그 벡터를 사전 학습된 머신러닝 이상치 탐지 모델(Isolation Forest / AutoEncoder)로 실시간 추론하여 제로데이 공격 및 비정상 접근 패턴을 즉시 식별합니다.</p>
+            <div class="detail-tags" id="visionStepTags">
+              <span class="detail-tag">Machine Learning</span>
+              <span class="detail-tag">Anomaly Detection</span>
+              <span class="detail-tag">AutoEncoder</span>
+              <span class="detail-tag">Real-time Inference</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -392,6 +440,12 @@
           <div class="vault-user-info">
             <span class="vault-user-badge" aria-hidden="true"></span>
             <span class="vault-user-name" id="vaultUser">Vault</span>
+            <span class="vault-security-pill" title="WebAuthn 하드웨어 보안키 기반 인증 세션">
+              <svg class="vault-shield-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              </svg>
+              WebAuthn 보안 세션
+            </span>
           </div>
           <div class="vault-topbar-actions">
             <button id="addPasskeyBtn" class="v-btn outline sm" type="button">패스키 추가</button>
@@ -452,9 +506,9 @@
   </footer>
 
   <script src="https://unpkg.com/@simplewebauthn/browser@11/dist/bundle/index.umd.min.js"></script>
-  <script src="js/main.js?v=20261005_05"></script>
-  <script src="js/auth.js?v=20261005_05"></script>
-  <script src="js/vault.js?v=20261005_05"></script>
+  <script src="js/main.js?v=20261005_06"></script>
+  <script src="js/auth.js?v=20261005_06"></script>
+  <script src="js/vault.js?v=20261005_06"></script>
 </body>
 
 </html>
