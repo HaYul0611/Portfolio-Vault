@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>오하율 — Portfolio 2026</title>
+  <meta name="description" content="채용 담당자에게 보여주는 오하율의 포트폴리오 페이지">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="nav" role="banner">
+    <span class="nav-year">2026</span>
+    <span class="nav-name">Ha Yul Oh</span>
+    <div class="nav-right"><span>Infrastructure</span><span>Security</span><span>Web Development</span></div>
+  </header>
+
+  <main>
+    <section class="hero" aria-label="메인 소개">
+      <h1 class="hero-word">portfolio</h1>
+      <div class="hero-line" aria-hidden="true"></div>
+      <p class="hero-name">오하율</p>
+      <p class="hero-sub">2026 Portfolio</p>
+    </section>
+
+    <hr class="divider">
+
+    <section class="about" aria-label="자기소개">
+      <div class="about-left">
+        <div class="profile-photo-wrap">
+          <img src="assets/profile.jpg" alt="오하율 프로필 사진" class="profile-photo" width="180">
+        </div>
+        <h2 class="about-intro">엔지니어<span class="about-dash" aria-hidden="true"></span><br>오하율 입니다.</h2>
+        <p class="about-desc">병원 행정 중간관리자 출신,<br>웹 풀스택을 이수하고<br>현재 인프라 보안 엔지니어를<br>목표로 전환 중입니다.</p>
+        <p class="about-label">GitHub</p>
+        <p class="about-value"><a href="https://github.com/HaYul0611" target="_blank" rel="noopener noreferrer">github.com/HaYul0611</a></p>
+      </div>
+      <div class="about-right">
+        <h3 class="section-title">Education</h3>
+        <div class="info-row"><span class="info-text">바이브코딩 AI 기반 웹풀스택 개발 과정 이수</span><span class="info-date">25.12 ~ 26.06</span></div>
+        <div class="info-row"><span class="info-text">SKT ALEPH 인프라/보안 과정 수강 중</span><span class="info-date">26.08 ~</span></div>
+        <h3 class="section-title section-gap">Experience</h3>
+        <div class="info-row"><span class="info-text">병원 원무 · 행정 중간관리자</span></div>
+        <div class="info-row sub"><span class="info-text">응급실 인수인계 시스템 디지털 전환</span></div>
+        <div class="info-row sub"><span class="info-text">5개 파트 업무 매뉴얼 문서화</span></div>
+        <h3 class="section-title section-gap">Skills</h3>
+        <div class="info-row"><span class="info-text">HTML / CSS / JavaScript / TypeScript</span></div>
+        <div class="info-row"><span class="info-text">Node.js / Express.js / MySQL</span></div>
+        <div class="info-row"><span class="info-text">Git / GitHub / JWT / REST API</span></div>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- === VAULT 비공개 영역 === -->
+    <section class="vault-section" aria-label="비공개 영역">
+      <div class="vault-header">
+        <div class="vault-title-row">
+          <svg class="vault-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <h2 class="section-title">Private Vault</h2>
+        </div>
+        <p class="vault-desc">이 영역은 패스키로 보호됩니다. 비밀번호 없이 기기 인증만으로 접근합니다.</p>
+      </div>
+
+      <div id="vaultAuth" class="vault-auth">
+        <div class="auth-grid">
+          <div class="auth-box">
+            <h3>로그인</h3>
+            <input type="text" id="loginUsername" class="v-input" placeholder="사용자 이름">
+            <button id="loginBtn" class="v-btn primary" type="button">패스키로 로그인</button>
+          </div>
+          <div class="auth-sep"><span>또는</span></div>
+          <div class="auth-box">
+            <h3>새 계정</h3>
+            <input type="text" id="signupUsername" class="v-input" placeholder="사용자 이름 (2자 이상)">
+            <button id="signupBtn" class="v-btn outline" type="button">계정 만들고 패스키 등록</button>
+          </div>
+        </div>
+        <p class="auth-msg" id="authMsg" hidden></p>
+      </div>
+
+      <div id="vaultContent" class="vault-content" hidden>
+        <div class="vault-bar">
+          <span class="vault-user" id="vaultUser"></span>
+          <div class="vault-bar-btns">
+            <button id="addPasskeyBtn" class="v-btn outline sm" type="button">패스키 추가</button>
+            <button id="manageKeysBtn" class="v-btn outline sm" type="button">패스키 관리</button>
+            <button id="logoutBtn" class="v-btn outline sm" type="button">로그아웃</button>
+          </div>
+        </div>
+        <div id="keysPanel" class="keys-panel" hidden>
+          <h4>등록된 패스키</h4>
+          <div id="keysList" class="keys-list"></div>
+        </div>
+        <div class="notes-area">
+          <div class="notes-hdr">
+            <h3>비공개 메모</h3>
+            <button id="addNoteBtn" class="v-btn primary sm" type="button">메모 추가</button>
+          </div>
+          <div id="notesList" class="notes-list"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <p class="footer-motto">그럼에도 불구하고, 앞으로.</p>
+    <p class="footer-copy">&copy; 2026 오하율</p>
+  </footer>
+
+  <div id="modal" class="modal-overlay" hidden>
+    <div class="modal-card">
+      <div class="modal-header"><h3 id="modalTitle"></h3><button class="modal-x" id="modalClose" type="button">&times;</button></div>
+      <div id="modalBody" class="modal-body"></div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/@simplewebauthn/browser@11/dist/bundle/index.umd.min.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/vault.js"></script>
+</body>
+</html>

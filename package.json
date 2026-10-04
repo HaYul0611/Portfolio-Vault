@@ -1,0 +1,17 @@
+{
+  "name": "portfolio-vault",
+  "version": "1.0.0",
+  "description": "패스키로 보호되는 포트폴리오 비공개 영역",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "@simplewebauthn/server": "^11.0.0",
+    "@supabase/supabase-js": "^2.49.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.0",
+    "express-session": "^1.18.0"
+  }
+}
