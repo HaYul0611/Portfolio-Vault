@@ -16,9 +16,16 @@ var db = createClient(
   process.env.SUPABASE_SERVICE_KEY
 );
 
-/* RP 설정 */
-function rpID() { return process.env.RP_ID || 'localhost'; }
-function rpOrigin() { return process.env.RP_ORIGIN || 'http://localhost:3000'; }
+/* RP 설정 (Render 내장 환경변수 자동 감지 폴백 포함) */
+function rpID() {
+  return process.env.RP_ID || process.env.RENDER_EXTERNAL_HOSTNAME || 'localhost';
+}
+function rpOrigin() {
+  if (process.env.RP_ORIGIN) return process.env.RP_ORIGIN;
+  if (process.env.RENDER_EXTERNAL_URL) return process.env.RENDER_EXTERNAL_URL;
+  if (process.env.RENDER_EXTERNAL_HOSTNAME) return 'https://' + process.env.RENDER_EXTERNAL_HOSTNAME;
+  return 'http://localhost:3000';
+}
 var rpName = 'Portfolio-Vault';
 
 /* === 회원가입 (사용자 생성) === */
@@ -127,9 +134,9 @@ router.post('/register/verify', async function(req, res) {
 
     var info = verification.registrationInfo;
 
-    /* 공개키 저장 */
+    /* 공개키 저장 (info.credential.id는 이미 Base64URL string) */
     await db.from('vault_credentials').insert({
-      id: Buffer.from(info.credential.id).toString('base64url'),
+      id: info.credential.id,
       user_id: userId,
       public_key: Buffer.from(info.credential.publicKey).toString('base64'),
       counter: info.credential.counter,
@@ -160,12 +167,25 @@ router.post('/login/options', async function(req, res) {
     if (!user.data) return res.status(404).json({ error: '사용자를 찾을 수 없습니다.' });
 
     var creds = await db.from('vault_credentials').select('id, transports').eq('user_id', user.data.id);
-    var allowCredentials = (creds.data || []).map(function(c) {
-      return {
+    var allowCredentials = [];
+    (creds.data || []).forEach(function(c) {
+      var transports = c.transports ? JSON.parse(c.transports) : undefined;
+      allowCredentials.push({
         id: c.id,
         type: 'public-key',
-        transports: c.transports ? JSON.parse(c.transports) : undefined
-      };
+        transports: transports
+      });
+      /* 혹시 이전에 base64url로 이중 인코딩되어 저장된 구버전 크레덴셜이면 원본 ID도 함께 전달 */
+      try {
+        var decoded = Buffer.from(c.id, 'base64url').toString('utf8');
+        if (decoded && decoded !== c.id && /^[a-zA-Z0-9_-]+$/.test(decoded)) {
+          allowCredentials.push({
+            id: decoded,
+            type: 'public-key',
+            transports: transports
+          });
+        }
+      } catch (e) {}
     });
 
     if (allowCredentials.length === 0) {
@@ -211,13 +231,15 @@ router.post('/login/verify', async function(req, res) {
 
     if (!chResult.data) return res.status(400).json({ error: '유효한 챌린지가 없습니다.' });
 
-    /* 크레덴셜 조회 */
+    /* 크레덴셜 조회 (정상 ID 및 구버전 이중인코딩 ID 모두 조회 지원) */
     var credId = req.body.credential.id;
+    var doubleEncoded = Buffer.from(credId).toString('base64url');
     var cred = await db.from('vault_credentials')
       .select('*')
-      .eq('id', credId)
+      .in('id', [credId, doubleEncoded])
       .eq('user_id', userId)
-      .single();
+      .limit(1)
+      .maybeSingle();
 
     if (!cred.data) return res.status(403).json({ error: '등록되지 않은 패스키입니다.' });
 
@@ -241,7 +263,7 @@ router.post('/login/verify', async function(req, res) {
     /* 카운터 업데이트 */
     await db.from('vault_credentials').update({
       counter: verification.authenticationInfo.newCounter
-    }).eq('id', credId);
+    }).eq('id', cred.data.id);
 
     /* 챌린지 사용 처리 */
     await db.from('vault_challenges').update({ used: true }).eq('id', chResult.data.id);
