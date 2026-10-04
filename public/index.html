@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=20261005_04">
 </head>
 
 <body>
@@ -331,7 +331,12 @@
       <!-- 수료증 모달 -->
       <div class="modal-overlay" id="certModal" hidden aria-modal="true" role="dialog" aria-label="수료증">
         <div class="modal-content">
-          <button class="modal-close" type="button" id="certClose" aria-label="닫기">x</button>
+          <button class="modal-close" type="button" id="certClose" aria-label="닫기">
+            <svg class="close-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
           <img src="assets/certificate.jpg" alt="바이브코딩 AI 기반 웹풀스택 개발 과정 수료증 (생년월일 비공개 처리)" class="modal-img">
         </div>
       </div>
@@ -405,9 +410,15 @@
         <div class="notes-section">
           <div class="notes-header">
             <h3 class="notes-header-title">비공개 자료 및 연구 메모</h3>
-            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-              <input type="text" id="noteSearchInput" class="v-input" placeholder="🔍 메모 검색..." style="width:160px;padding:6px 12px;font-size:12px">
-              <button id="addNoteBtn" class="v-btn primary sm" type="button">+ 메모 추가</button>
+            <div class="notes-header-actions">
+              <div class="search-box-wrap">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="noteSearchInput" class="v-input search-input" placeholder="메모 검색...">
+              </div>
+              <button id="addNoteBtn" class="v-btn primary header-add-btn" type="button">+ 메모 추가</button>
             </div>
           </div>
           <div id="categoryFilter" class="category-filter-bar"></div>
@@ -421,7 +432,12 @@
       <div class="vault-modal-content">
         <div class="vault-modal-header">
           <h3 id="vaultModalTitle" class="vault-modal-title">메모</h3>
-          <button id="vaultModalClose" class="vault-modal-close" type="button" aria-label="닫기">&times;</button>
+          <button id="vaultModalClose" class="vault-modal-close" type="button" aria-label="닫기">
+            <svg class="close-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
         </div>
         <div id="vaultModalBody"></div>
       </div>
@@ -436,9 +452,9 @@
   </footer>
 
   <script src="https://unpkg.com/@simplewebauthn/browser@11/dist/bundle/index.umd.min.js"></script>
-  <script src="js/main.js?v=20261005_03"></script>
-  <script src="js/auth.js?v=20261005_03"></script>
-  <script src="js/vault.js?v=20261005_03"></script>
+  <script src="js/main.js?v=20261005_04"></script>
+  <script src="js/auth.js?v=20261005_04"></script>
+  <script src="js/vault.js?v=20261005_04"></script>
 </body>
 
 </html>

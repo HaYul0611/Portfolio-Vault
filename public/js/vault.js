@@ -128,10 +128,10 @@ var Vault = (function() {
       '<p style="font-size:13px;color:var(--text-mid);margin-bottom:14px">카테고리 이름을 변경하면 해당 메모들이 일괄 업데이트되며, 카테고리를 삭제하면 속한 메모는 \'일반\' 카테고리로 안전 이동됩니다.</p>' +
       '<div style="max-height:220px;overflow-y:auto;margin-bottom:20px">' + listHtml + '</div>' +
       '<div style="border-top:0.5px solid var(--border);padding-top:16px">' +
-        '<label style="display:block;font-size:12px;font-weight:600;margin-bottom:6px">새 카테고리 생성</label>' +
-        '<div style="display:flex;gap:8px">' +
-          '<input type="text" id="newCategoryInputName" class="v-input" placeholder="새 카테고리 이름">' +
-          '<button type="button" class="v-btn primary sm" onclick="Vault.createNewCategory()" style="white-space:nowrap">생성</button>' +
+        '<label style="display:block;font-size:12px;font-weight:600;margin-bottom:8px">새 카테고리 생성</label>' +
+        '<div class="new-category-row">' +
+          '<input type="text" id="newCategoryInputName" class="v-input new-category-input" placeholder="새 카테고리 이름">' +
+          '<button type="button" class="v-btn primary new-category-btn" onclick="Vault.createNewCategory()">생성</button>' +
         '</div>' +
       '</div></div>';
 
