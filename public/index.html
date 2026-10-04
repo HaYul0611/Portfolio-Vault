@@ -1,5 +1,6 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,17 +8,28 @@
   <meta name="description" content="채용 담당자에게 보여주는 오하율의 포트폴리오 페이지">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
+  <!-- 상단 내비게이션 -->
   <header class="nav" role="banner">
     <span class="nav-year">2026</span>
     <span class="nav-name">Ha Yul Oh</span>
-    <div class="nav-right"><span>Infrastructure</span><span>Security</span><span>Web Development</span></div>
+    <div class="nav-right">
+      <span>Infrastructure</span>
+      <span>Security</span>
+      <span>Web Development</span>
+    </div>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="다크 모드 전환">
+      <span class="theme-icon" id="themeIcon"></span>
+    </button>
   </header>
 
   <main>
+    <!-- 히어로 섹션 -->
     <section class="hero" aria-label="메인 소개">
       <h1 class="hero-word">portfolio</h1>
       <div class="hero-line" aria-hidden="true"></div>
@@ -27,99 +39,402 @@
 
     <hr class="divider">
 
+    <!-- 소개 섹션 -->
     <section class="about" aria-label="자기소개">
       <div class="about-left">
-        <div class="profile-photo-wrap">
-          <img src="assets/profile.jpg" alt="오하율 프로필 사진" class="profile-photo" width="180">
+        <div class="about-left-main">
+          <div class="profile-photo-wrap">
+            <img src="assets/profile.jpg" alt="오하율 프로필 사진" class="profile-photo" width="220" height="280">
+          </div>
+          <h2 class="about-intro">
+            엔지니어<span class="about-dash" aria-hidden="true"></span><br>
+            오하율 입니다.
+          </h2>
+          <p class="about-desc">
+            병원 행정 중간관리자 출신,<br>
+            웹 풀스택을 이수하고<br>
+            현재 인프라 보안 엔지니어를<br>
+            목표로 전환 중입니다.
+          </p>
         </div>
-        <h2 class="about-intro">엔지니어<span class="about-dash" aria-hidden="true"></span><br>오하율 입니다.</h2>
-        <p class="about-desc">병원 행정 중간관리자 출신,<br>웹 풀스택을 이수하고<br>현재 인프라 보안 엔지니어를<br>목표로 전환 중입니다.</p>
-        <p class="about-label">GitHub</p>
-        <p class="about-value"><a href="https://github.com/HaYul0611" target="_blank" rel="noopener noreferrer">github.com/HaYul0611</a></p>
+        <div class="about-left-side">
+          <p class="about-label">Motto</p>
+          <p class="about-value">아는 만큼 보인다.</p>
+          <p class="about-label">GitHub</p>
+          <p class="about-value">
+            <a href="https://github.com/HaYul0611" target="_blank" rel="noopener noreferrer">github.com/HaYul0611</a>
+          </p>
+          <p class="about-label">Notion</p>
+          <p class="about-value">
+            <a href="https://ohayulme.notion.site/Hello-I-m-47d346571e158253ac7f016556bc774e" target="_blank"
+              rel="noopener noreferrer">ohayulme.notion.site</a>
+          </p>
+        </div>
       </div>
       <div class="about-right">
         <h3 class="section-title">Education</h3>
-        <div class="info-row"><span class="info-text">바이브코딩 AI 기반 웹풀스택 개발 과정 이수</span><span class="info-date">25.12 ~ 26.06</span></div>
-        <div class="info-row"><span class="info-text">SKT ALEPH 인프라/보안 과정 수강 중</span><span class="info-date">26.08 ~</span></div>
+        <div class="info-row">
+          <span class="info-text">바이브코딩 AI 기반 웹풀스택 개발 과정 이수</span>
+          <span class="info-date">25.12 ~ 26.06</span>
+        </div>
+        <div class="info-row">
+          <span class="info-text">SKT ALEPH 인프라/보안 과정 수강 중</span>
+          <span class="info-date">26.08 ~</span>
+        </div>
+
         <h3 class="section-title section-gap">Experience</h3>
-        <div class="info-row"><span class="info-text">병원 원무 · 행정 중간관리자</span></div>
-        <div class="info-row sub"><span class="info-text">응급실 인수인계 시스템 디지털 전환</span></div>
-        <div class="info-row sub"><span class="info-text">5개 파트 업무 매뉴얼 문서화</span></div>
+        <div class="info-row">
+          <span class="info-text">병원 원무 · 행정 중간관리자</span>
+          <span class="info-date"></span>
+        </div>
+        <div class="info-row sub">
+          <span class="info-text">응급실 인수인계 시스템 디지털 전환</span>
+        </div>
+        <div class="info-row sub">
+          <span class="info-text">5개 파트 업무 매뉴얼 문서화</span>
+        </div>
+        <div class="info-row sub">
+          <span class="info-text">의료비 민원 프로세스 개선</span>
+        </div>
+
+        <h3 class="section-title section-gap">Certifications</h3>
+        <div class="info-row">
+          <span class="info-text">병원행정사</span>
+          <span class="info-date">19.03</span>
+        </div>
+        <div class="info-row">
+          <span class="info-text">건강보험사</span>
+          <span class="info-date">19.03</span>
+        </div>
+        <div class="info-row">
+          <span class="info-text">건강보험청구관리사</span>
+          <span class="info-date">18.07</span>
+        </div>
+        <div class="info-row">
+          <span class="info-text">간호조무사</span>
+          <span class="info-date">15.10</span>
+        </div>
+        <div class="info-row">
+          <span class="info-text">병원코디네이터</span>
+          <span class="info-date">14.11</span>
+        </div>
+        <div class="info-row">
+          <span class="info-text">정보기술자격(ITQ)</span>
+          <span class="info-date">14.06</span>
+        </div>
+        <div class="info-row preparing">
+          <span class="info-text">ADsP / 네트워크관리사 2급 / 리눅스마스터 2급 / SQLD</span>
+          <span class="info-date">준비 중</span>
+        </div>
+
         <h3 class="section-title section-gap">Skills</h3>
-        <div class="info-row"><span class="info-text">HTML / CSS / JavaScript / TypeScript</span></div>
-        <div class="info-row"><span class="info-text">Node.js / Express.js / MySQL</span></div>
-        <div class="info-row"><span class="info-text">Git / GitHub / JWT / REST API</span></div>
+        <div class="info-row">
+          <span class="info-text">HTML / CSS / JavaScript / TypeScript</span>
+        </div>
+        <div class="info-row">
+          <span class="info-text">Node.js / Express.js / MySQL</span>
+        </div>
+        <div class="info-row">
+          <span class="info-text">Notion / Git / GitHub / JWT / REST API</span>
+        </div>
       </div>
     </section>
 
     <hr class="divider">
 
-    <!-- === VAULT 비공개 영역 === -->
-    <section class="vault-section" aria-label="비공개 영역">
+    <!-- 타임라인 섹션 -->
+    <section class="timeline-section" aria-label="경력 전환 타임라인">
+      <h2 class="section-title">Timeline</h2>
+      <p class="section-slash" aria-hidden="true">/</p>
+      <div class="timeline">
+        <div class="timeline-item past">
+          <span class="timeline-dot" aria-hidden="true"></span>
+          <p class="timeline-period">2019.12 ~ 2026.01</p>
+          <p class="timeline-title">병원 행정</p>
+          <p class="timeline-desc">원무 · 행정 중간관리자<br>프로세스 개선 · 민원 관리</p>
+        </div>
+        <div class="timeline-item done">
+          <span class="timeline-dot" aria-hidden="true"></span>
+          <p class="timeline-period">25.12 ~ 26.06</p>
+          <p class="timeline-title">웹 풀스택 이수</p>
+          <p class="timeline-desc">AI 기반 바이브코딩<br>웹 풀스택 개발 과정</p>
+        </div>
+        <div class="timeline-item current">
+          <span class="timeline-dot" aria-hidden="true"></span>
+          <p class="timeline-period">26.08 ~</p>
+          <p class="timeline-title">인프라 · 보안</p>
+          <p class="timeline-desc">SKT ALEPH<br>네트워크 · 서버 · 클라우드</p>
+        </div>
+        <div class="timeline-item goal">
+          <span class="timeline-dot" aria-hidden="true"></span>
+          <p class="timeline-period">목표</p>
+          <p class="timeline-title">보안 엔지니어</p>
+          <p class="timeline-desc">AI 기반 실시간<br>보안 감지 시스템 구축</p>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- 강점 SAR 섹션 -->
+    <section class="strengths" aria-label="핵심 강점">
+      <h2 class="section-title">Strengths</h2>
+      <p class="section-slash" aria-hidden="true">/</p>
+
+      <div class="sar-list">
+        <div class="sar-item">
+          <button class="sar-toggle" type="button" aria-expanded="false" aria-controls="sar1-detail">
+            <span class="sar-number" aria-hidden="true">01</span>
+            <span class="sar-name">문제 해결력</span>
+            <span class="sar-arrow" aria-hidden="true">+</span>
+          </button>
+          <div class="sar-detail" id="sar1-detail" hidden>
+            <div class="sar-step">
+              <span class="sar-label">상황</span>
+              <p>응급실 교대 근무 시 구두 인수인계로 인해 업무 누락과 미신고가 반복 발생하여 민원 및 타 부서의 지적이 이어졌습니다.</p>
+            </div>
+            <div class="sar-step">
+              <span class="sar-label">행동</span>
+              <p>구글 스프레드시트와 Docs를 도입하여 고정 업무, 특이사항, 인수인계 내용을 기록하고 근무지 외 교대 근무자에게 실시간으로 공유되는 환경을 구축했습니다.</p>
+            </div>
+            <div class="sar-step">
+              <span class="sar-label">결과</span>
+              <p>야간 감염병 신고 누락이 감소하고, 상급자 지시와 특이 환자 정보가 빠르게 공유되면서 업무 실수와 근무자 스트레스가 줄었습니다.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="sar-item">
+          <button class="sar-toggle" type="button" aria-expanded="false" aria-controls="sar2-detail">
+            <span class="sar-number" aria-hidden="true">02</span>
+            <span class="sar-name">업무 프로세스 개선</span>
+            <span class="sar-arrow" aria-hidden="true">+</span>
+          </button>
+          <div class="sar-detail" id="sar2-detail" hidden>
+            <div class="sar-step">
+              <span class="sar-label">상황</span>
+              <p>신규 입사자가 파트별 업무 구분이 불명확하여 혼동과 부담감으로 업무 실수가 발생했습니다.</p>
+            </div>
+            <div class="sar-step">
+              <span class="sar-label">행동</span>
+              <p>응급실, 외래, 의무기록, 제증명, 입원 등 5개 파트로 분류하고, 각 파트별 주요 업무 루틴과 매뉴얼을 문서화했습니다.</p>
+            </div>
+            <div class="sar-step">
+              <span class="sar-label">결과</span>
+              <p>파트 간 업무 구분이 명확해지면서 신규 입사자의 타 파트 업무 습득력이 향상되었습니다.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="sar-item">
+          <button class="sar-toggle" type="button" aria-expanded="false" aria-controls="sar3-detail">
+            <span class="sar-number" aria-hidden="true">03</span>
+            <span class="sar-name">커뮤니케이션</span>
+            <span class="sar-arrow" aria-hidden="true">+</span>
+          </button>
+          <div class="sar-detail" id="sar3-detail" hidden>
+            <div class="sar-step">
+              <span class="sar-label">상황</span>
+              <p>의료진과 심사팀 간 비용 문제로 환자 및 보호자 민원이 발생하고, 외부 보험사 문의와 2차 민원으로 확대되었습니다.</p>
+            </div>
+            <div class="sar-step">
+              <span class="sar-label">행동</span>
+              <p>의료진에서 원무로 비용 안내, 심사팀에서 원무로 급여/비급여 확인, 원무에서 의료진으로 공유되는 정보 흐름을 정립하고, 외부 문의는 원무과에서 종합 답변하도록 프로세스를 강화했습니다.
+              </p>
+            </div>
+            <div class="sar-step">
+              <span class="sar-label">결과</span>
+              <p>고비용 검사 시 사전 동의와 전자서명 절차가 도입되어 비용 민원이 감소했고, 환자에게 개인 보험 확인 방향을 안내하여 비용 부담을 낮출 수 있었습니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- 프로젝트 섹션 -->
+    <section class="projects" aria-label="프로젝트">
+      <h2 class="section-title">Projects</h2>
+      <p class="section-slash" aria-hidden="true">/</p>
+      <div class="project-grid">
+        <div class="project-item">
+          <span class="project-num" aria-hidden="true">01</span>
+          <h3 class="project-name">
+            <a href="https://github.com/rkdwlsdnjs9-prog/Fastival-management-master" target="_blank"
+              rel="noopener noreferrer">Fastival-management</a>
+          </h3>
+          <p class="project-desc">축제 올인원 O2O 통합 플랫폼</p>
+          <p class="project-tag">팀 프로젝트</p>
+        </div>
+        <div class="project-item">
+          <span class="project-num" aria-hidden="true">02</span>
+          <h3 class="project-name">
+            <a href="https://github.com/HaYul0611/WeddingPlatform" target="_blank"
+              rel="noopener noreferrer">WeddingPlatform</a>
+          </h3>
+          <p class="project-desc">웨딩 올인원 통합 플랫폼</p>
+          <p class="project-meta">컨설팅 · 모바일 청첩장 · 뷰티/헬스케어 · CRM</p>
+        </div>
+        <div class="project-item">
+          <span class="project-num" aria-hidden="true">03</span>
+          <h3 class="project-name">
+            <a href="https://github.com/HaYul0611/varo-shopping-mall" target="_blank" rel="noopener noreferrer">VARO</a>
+          </h3>
+          <p class="project-desc">남성 패션 커뮤니티 쇼핑몰</p>
+          <p class="project-meta">Node.js · Express · MySQL · JWT</p>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- 목표 비전 섹션 -->
+    <section class="vision" aria-label="목표 비전">
+      <h2 class="section-title">Vision</h2>
+      <p class="section-slash" aria-hidden="true">/</p>
+      <div class="vision-content">
+        <p class="vision-statement">AI 기반 실시간 인프라 보안 감지 시스템을 구축하여,<br>기업 환경에 맞게 활용할 수 있는 보안 솔루션을 만드는 것이 목표입니다.</p>
+        <div class="vision-diagram" aria-label="보안 시스템 구조 키워드">
+          <div class="vision-node">네트워크 모니터링</div>
+          <div class="vision-arrow" aria-hidden="true"></div>
+          <div class="vision-node accent">AI 실시간 분석</div>
+          <div class="vision-arrow" aria-hidden="true"></div>
+          <div class="vision-node">위협 탐지 · 대응</div>
+          <div class="vision-arrow" aria-hidden="true"></div>
+          <div class="vision-node">기업 맞춤 배포</div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- 근거 섹션 -->
+    <section class="evidence" aria-label="공개 근거">
+      <h2 class="section-title">Evidence</h2>
+      <p class="section-slash" aria-hidden="true">/</p>
+      <div class="evidence-grid">
+        <a href="https://github.com/HaYul0611" target="_blank" rel="noopener noreferrer" class="evidence-item">
+          <span class="evidence-label">GitHub</span>
+          <span class="evidence-desc">github.com/HaYul0611</span>
+        </a>
+        <a href="https://github.com/rkdwlsdnjs9-prog/Fastival-management-master" target="_blank"
+          rel="noopener noreferrer" class="evidence-item">
+          <span class="evidence-label">팀 프로젝트</span>
+          <span class="evidence-desc">Festival O2O 플랫폼</span>
+        </a>
+        <button class="evidence-item" type="button" id="certBtn" aria-label="수료증 보기">
+          <span class="evidence-label">수료증</span>
+          <span class="evidence-desc">웹풀스택 과정 이수</span>
+        </button>
+      </div>
+      <!-- 수료증 모달 -->
+      <div class="modal-overlay" id="certModal" hidden aria-modal="true" role="dialog" aria-label="수료증">
+        <div class="modal-content">
+          <button class="modal-close" type="button" id="certClose" aria-label="닫기">x</button>
+          <img src="assets/certificate.jpg" alt="바이브코딩 AI 기반 웹풀스택 개발 과정 수료증 (생년월일 비공개 처리)" class="modal-img">
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- === Private Vault 섹션 (과제 8) === -->
+    <section class="vault-section" id="vaultSection" aria-label="비공개 영역">
       <div class="vault-header">
-        <div class="vault-title-row">
-          <svg class="vault-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <div class="vault-title-wrap">
+          <svg class="vault-lock-icon" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
           <h2 class="section-title">Private Vault</h2>
         </div>
-        <p class="vault-desc">이 영역은 패스키로 보호됩니다. 비밀번호 없이 기기 인증만으로 접근합니다.</p>
+        <p class="section-slash" aria-hidden="true">/</p>
+        <p class="vault-desc">비밀번호 없이 기기 패스키(WebAuthn 지문/얼굴 인식/PIN)로 안전하게 보호되는 비공개 작업 공간입니다.</p>
       </div>
 
+      <!-- 비인증 상태: 로그인 / 회원가입 -->
       <div id="vaultAuth" class="vault-auth">
         <div class="auth-grid">
-          <div class="auth-box">
-            <h3>로그인</h3>
-            <input type="text" id="loginUsername" class="v-input" placeholder="사용자 이름">
+          <div class="auth-card">
+            <div>
+              <h3 class="auth-card-title">패스키 로그인</h3>
+              <p class="auth-card-sub">등록된 기기의 패스키로 즉시 인증합니다.</p>
+              <input type="text" id="loginUsername" class="v-input" placeholder="사용자 이름">
+            </div>
             <button id="loginBtn" class="v-btn primary" type="button">패스키로 로그인</button>
           </div>
-          <div class="auth-sep"><span>또는</span></div>
-          <div class="auth-box">
-            <h3>새 계정</h3>
-            <input type="text" id="signupUsername" class="v-input" placeholder="사용자 이름 (2자 이상)">
+
+          <div class="auth-divider-col">
+            <span class="auth-divider-text">OR</span>
+          </div>
+
+          <div class="auth-card">
+            <div>
+              <h3 class="auth-card-title">새 계정 등록</h3>
+              <p class="auth-card-sub">이름 입력 후 이 기기를 패스키로 등록합니다.</p>
+              <input type="text" id="signupUsername" class="v-input" placeholder="사용자 이름 (2자 이상)">
+            </div>
             <button id="signupBtn" class="v-btn outline" type="button">계정 만들고 패스키 등록</button>
           </div>
         </div>
-        <p class="auth-msg" id="authMsg" hidden></p>
+        <div class="auth-msg" id="authMsg" hidden></div>
       </div>
 
+      <!-- 인증 완료 상태: 비공개 대시보드 -->
       <div id="vaultContent" class="vault-content" hidden>
-        <div class="vault-bar">
-          <span class="vault-user" id="vaultUser"></span>
-          <div class="vault-bar-btns">
+        <div class="vault-topbar">
+          <div class="vault-user-info">
+            <span class="vault-user-badge" aria-hidden="true"></span>
+            <span class="vault-user-name" id="vaultUser">Vault</span>
+          </div>
+          <div class="vault-topbar-actions">
             <button id="addPasskeyBtn" class="v-btn outline sm" type="button">패스키 추가</button>
             <button id="manageKeysBtn" class="v-btn outline sm" type="button">패스키 관리</button>
             <button id="logoutBtn" class="v-btn outline sm" type="button">로그아웃</button>
           </div>
         </div>
+
+        <!-- 패스키 관리 패널 -->
         <div id="keysPanel" class="keys-panel" hidden>
-          <h4>등록된 패스키</h4>
+          <h4 class="keys-panel-title">등록된 패스키 기기 목록</h4>
           <div id="keysList" class="keys-list"></div>
         </div>
-        <div class="notes-area">
-          <div class="notes-hdr">
-            <h3>비공개 메모</h3>
-            <button id="addNoteBtn" class="v-btn primary sm" type="button">메모 추가</button>
+
+        <!-- 비공개 메모 영역 -->
+        <div class="notes-section">
+          <div class="notes-header">
+            <h3 class="notes-header-title">비공개 자료 및 연구 메모</h3>
+            <button id="addNoteBtn" class="v-btn primary sm" type="button">+ 메모 추가</button>
           </div>
-          <div id="notesList" class="notes-list"></div>
+          <div id="notesList" class="notes-grid"></div>
         </div>
       </div>
     </section>
+
+    <!-- Vault 메모 작성/수정 모달 -->
+    <div id="vaultModal" class="modal-overlay" hidden aria-modal="true" role="dialog">
+      <div class="vault-modal-content">
+        <div class="vault-modal-header">
+          <h3 id="vaultModalTitle" class="vault-modal-title">메모</h3>
+          <button id="vaultModalClose" class="vault-modal-close" type="button" aria-label="닫기">&times;</button>
+        </div>
+        <div id="vaultModalBody"></div>
+      </div>
+    </div>
   </main>
 
+  <!-- 푸터 -->
   <footer class="footer" role="contentinfo">
     <p class="footer-motto">그럼에도 불구하고, 앞으로.</p>
     <p class="footer-copy">&copy; 2026 오하율</p>
+    <p class="footer-purpose">이 페이지는 채용 담당자 또는 인사관리자에게 나의 역량과 경험을 보여주기 위한 포트폴리오입니다.</p>
   </footer>
-
-  <div id="modal" class="modal-overlay" hidden>
-    <div class="modal-card">
-      <div class="modal-header"><h3 id="modalTitle"></h3><button class="modal-x" id="modalClose" type="button">&times;</button></div>
-      <div id="modalBody" class="modal-body"></div>
-    </div>
-  </div>
 
   <script src="https://unpkg.com/@simplewebauthn/browser@11/dist/bundle/index.umd.min.js"></script>
   <script src="js/main.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/vault.js"></script>
 </body>
+
 </html>
