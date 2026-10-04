@@ -32,6 +32,11 @@ router.post('/signup', async function(req, res) {
     /* 중복 확인 */
     var existing = await db.from('vault_users').select('id').eq('username', username).maybeSingle();
     if (existing.data) {
+      /* 등록 도중 취소되어 패스키가 아직 없는 미완료 계정이면 이어서 등록 허용 */
+      var creds = await db.from('vault_credentials').select('id').eq('user_id', existing.data.id);
+      if (!creds.data || creds.data.length === 0) {
+        return res.json({ userId: existing.data.id, username: username });
+      }
       return res.status(409).json({ error: '이미 사용 중인 이름입니다.' });
     }
 
