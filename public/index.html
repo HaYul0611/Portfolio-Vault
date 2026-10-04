@@ -405,7 +405,10 @@
         <div class="notes-section">
           <div class="notes-header">
             <h3 class="notes-header-title">비공개 자료 및 연구 메모</h3>
-            <button id="addNoteBtn" class="v-btn primary sm" type="button">+ 메모 추가</button>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              <input type="text" id="noteSearchInput" class="v-input" placeholder="🔍 메모 검색..." style="width:160px;padding:6px 12px;font-size:12px">
+              <button id="addNoteBtn" class="v-btn primary sm" type="button">+ 메모 추가</button>
+            </div>
           </div>
           <div id="categoryFilter" class="category-filter-bar"></div>
           <div id="notesList" class="notes-grid"></div>
@@ -433,9 +436,9 @@
   </footer>
 
   <script src="https://unpkg.com/@simplewebauthn/browser@11/dist/bundle/index.umd.min.js"></script>
-  <script src="js/main.js?v=20261005_02"></script>
-  <script src="js/auth.js?v=20261005_02"></script>
-  <script src="js/vault.js?v=20261005_02"></script>
+  <script src="js/main.js?v=20261005_03"></script>
+  <script src="js/auth.js?v=20261005_03"></script>
+  <script src="js/vault.js?v=20261005_03"></script>
 </body>
 
 </html>

@@ -9,6 +9,49 @@ var Vault = (function() {
 
   function esc(str) { var d = document.createElement('div'); d.textContent = String(str || ''); return d.innerHTML; }
 
+  /* 프로젝트 미니멀 디자인 시스템 커스텀 다이얼로그 (confirm, alert, prompt 대체) */
+  function showConfirm(title, messageHtml, confirmBtnText, onConfirm) {
+    var html = '<div style="margin-bottom:12px">' +
+      '<p style="font-size:14px;color:var(--text);line-height:1.6;margin-bottom:24px">' + messageHtml + '</p>' +
+      '<div style="display:flex;justify-content:flex-end;gap:8px">' +
+        '<button type="button" class="v-btn outline sm" onclick="closeModal()">취소</button>' +
+        '<button type="button" id="customConfirmActionBtn" class="v-btn danger sm">' + (confirmBtnText || '확인') + '</button>' +
+      '</div></div>';
+    openModal(title, html);
+    document.getElementById('customConfirmActionBtn').onclick = async function() {
+      closeModal();
+      await onConfirm();
+    };
+  }
+
+  function showAlert(title, messageHtml) {
+    var html = '<div style="margin-bottom:12px">' +
+      '<p style="font-size:14px;color:var(--text);line-height:1.6;margin-bottom:20px">' + messageHtml + '</p>' +
+      '<div style="display:flex;justify-content:flex-end">' +
+        '<button type="button" class="v-btn primary sm" onclick="closeModal()">확인</button>' +
+      '</div></div>';
+    openModal(title, html);
+  }
+
+  function showPrompt(title, messageHtml, defaultValue, onConfirm) {
+    var html = '<div style="margin-bottom:12px">' +
+      '<p style="font-size:13px;color:var(--text-light);margin-bottom:10px">' + messageHtml + '</p>' +
+      '<input type="text" id="customPromptInput" class="v-input" value="' + esc(defaultValue) + '" style="margin-bottom:20px">' +
+      '<div style="display:flex;justify-content:flex-end;gap:8px">' +
+        '<button type="button" class="v-btn outline sm" onclick="closeModal()">취소</button>' +
+        '<button type="button" id="customPromptActionBtn" class="v-btn primary sm">확인</button>' +
+      '</div></div>';
+    openModal(title, html);
+    var input = document.getElementById('customPromptInput');
+    input.focus();
+    input.select();
+    document.getElementById('customPromptActionBtn').onclick = async function() {
+      var val = input.value.trim();
+      closeModal();
+      if (val) await onConfirm(val);
+    };
+  }
+
   async function api(url, opts) {
     var res = await fetch(url, Object.assign({ credentials: 'same-origin' }, opts || {}));
     if (res.status === 401 || res.status === 403) { onLogout(); throw new Error('인증 필요'); }
@@ -35,6 +78,7 @@ var Vault = (function() {
 
   var cachedNotes = [];
   var activeCategory = 'ALL';
+  var searchQuery = '';
 
   function getAllCategories() {
     var defaultCats = ['프로젝트', '취업/이력서', '회고', '학습/연구'];
@@ -94,33 +138,33 @@ var Vault = (function() {
     openModal('카테고리 관리', modalHtml);
   }
 
-  async function renameCategory(oldCat) {
-    var newCat = prompt('카테고리 새 이름을 입력하세요:', oldCat);
-    if (!newCat || newCat.trim() === '' || newCat.trim() === oldCat) return;
-    await api('/api/notes/categories/rename', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ oldCategory: oldCat, newCategory: newCat.trim() })
+  function renameCategory(oldCat) {
+    showPrompt('카테고리 이름 변경', '\'' + esc(oldCat) + '\' 카테고리의 새 이름을 입력하세요.', oldCat, async function(newCat) {
+      if (newCat === oldCat) return;
+      await api('/api/notes/categories/rename', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ oldCategory: oldCat, newCategory: newCat })
+      });
+      await loadNotes();
+      showManageCategories();
     });
-    closeModal();
-    await loadNotes();
-    showManageCategories();
   }
 
-  async function deleteCategory(catName) {
-    if (!confirm('정말 \'' + catName + '\' 카테고리를 삭제할까요?\n(속한 메모는 \'일반\' 카테고리로 안전 이동됩니다)')) return;
-    await api('/api/notes/categories/' + encodeURIComponent(catName), {
-      method: 'DELETE'
+  function deleteCategory(catName) {
+    showConfirm('카테고리 삭제', '\'' + esc(catName) + '\' 카테고리를 삭제할까요?<br><span style="font-size:12px;color:var(--text-light)">속한 메모는 \'일반\' 카테고리로 안전하게 이동됩니다.</span>', '삭제하기', async function() {
+      await api('/api/notes/categories/' + encodeURIComponent(catName), {
+        method: 'DELETE'
+      });
+      await loadNotes();
+      showManageCategories();
     });
-    closeModal();
-    await loadNotes();
-    showManageCategories();
   }
 
   async function createNewCategory() {
     var input = document.getElementById('newCategoryInputName');
     if (!input || !input.value.trim()) {
-      alert('카테고리 이름을 입력해주세요.');
+      showAlert('입력 오류', '생성할 카테고리 이름을 입력해주세요.');
       return;
     }
     var newCat = input.value.trim();
@@ -131,24 +175,32 @@ var Vault = (function() {
       body: JSON.stringify({
         category: newCat,
         title: newCat + ' 시작하기',
-        content: '새로 생성된 ' + newCat + ' 카테고리의 첫 번째 비공개 메모입니다.'
+        content: '새로 생성된 ' + newCat + ' 카테고리의 첫 번째 비공개 연구 메모입니다.'
       })
     });
     closeModal();
     await loadNotes();
-    alert('\'' + newCat + '\' 카테고리가 성공적으로 생성되었습니다!');
   }
 
-  /* 비공개 메모 화면 렌더링 */
+  /* 비공개 메모 화면 렌더링 (카테고리 필터 + 실시간 검색 연동) */
   function renderNotesList() {
     var filtered = cachedNotes;
     if (activeCategory !== 'ALL') {
-      filtered = cachedNotes.filter(function(n) { return (n.category || '').trim() === activeCategory; });
+      filtered = filtered.filter(function(n) { return (n.category || '').trim() === activeCategory; });
+    }
+    if (searchQuery) {
+      var q = searchQuery.toLowerCase();
+      filtered = filtered.filter(function(n) {
+        return (n.title || '').toLowerCase().includes(q) ||
+               (n.content || '').toLowerCase().includes(q) ||
+               (n.category || '').toLowerCase().includes(q);
+      });
     }
 
     if (filtered.length === 0) {
       notesEl.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:32px 16px;grid-column:1/-1">' +
-        (activeCategory === 'ALL' ? '아직 등록된 메모가 없습니다.' : '선택한 카테고리에 해당하는 메모가 없습니다.') + '</p>';
+        (searchQuery ? '\'' + esc(searchQuery) + '\' 검색 결과가 없습니다.' :
+         activeCategory === 'ALL' ? '아직 등록된 메모가 없습니다.' : '선택한 카테고리에 해당하는 메모가 없습니다.') + '</p>';
       return;
     }
 
@@ -288,10 +340,11 @@ var Vault = (function() {
   }
 
   /* 메모 삭제 */
-  async function deleteNote(id) {
-    if (!confirm('이 메모를 삭제할까요?')) return;
-    await api('/api/notes/' + id, { method: 'DELETE' });
-    loadNotes();
+  function deleteNote(id) {
+    showConfirm('메모 삭제 확인', '이 비공개 메모를 삭제할까요?<br><span style="font-size:12px;color:var(--text-light)">삭제 후에는 복구할 수 없습니다.</span>', '삭제하기', async function() {
+      await api('/api/notes/' + id, { method: 'DELETE' });
+      loadNotes();
+    });
   }
 
   /* 패스키 목록 */
@@ -314,22 +367,23 @@ var Vault = (function() {
     }).join('');
   }
 
-  async function renameKey(id, currentName) {
-    var name = prompt('새 이름을 입력하세요', currentName);
-    if (!name) return;
-    await Auth.renameCredential(id, name);
-    loadKeys();
+  function renameKey(id, currentName) {
+    showPrompt('패스키 이름 변경', '등록된 패스키 기기의 새 이름을 입력하세요.', currentName, async function(newName) {
+      await Auth.renameCredential(id, newName);
+      loadKeys();
+    });
   }
 
   async function deleteKey(id) {
     var creds = await Auth.getCredentials();
     if (creds.length <= 1) {
-      alert('마지막 패스키는 삭제할 수 없습니다. 패스키가 모두 삭제되면 계정에 접근할 수 없게 됩니다.');
+      showAlert('삭제 불가 안내', '마지막 남은 패스키는 삭제할 수 없습니다.<br><span style="font-size:12px;color:var(--text-light)">패스키가 모두 삭제되면 계정에 영구적으로 접근할 수 없게 됩니다.</span>');
       return;
     }
-    if (!confirm('이 패스키를 삭제할까요? 삭제 후에는 이 기기로 로그인할 수 없습니다.')) return;
-    await Auth.deleteCredential(id);
-    loadKeys();
+    showConfirm('패스키 삭제 확인', '이 패스키를 삭제할까요?<br><span style="font-size:12px;color:#d9534f">삭제 후에는 이 기기로 로그인할 수 없습니다.</span>', '삭제하기', async function() {
+      await Auth.deleteCredential(id);
+      loadKeys();
+    });
   }
 
   /* 이벤트 */
@@ -338,6 +392,15 @@ var Vault = (function() {
     keysPanel.hidden = !keysPanel.hidden;
     if (!keysPanel.hidden) loadKeys();
   });
+
+  /* 실시간 메모 검색 이벤트 리스너 */
+  var searchEl = document.getElementById('noteSearchInput');
+  if (searchEl) {
+    searchEl.addEventListener('input', function() {
+      searchQuery = this.value.trim();
+      renderNotesList();
+    });
+  }
 
   /* 초기화: 이미 로그인 상태인지 확인 */
   Auth.checkAuth().then(function(me) {
