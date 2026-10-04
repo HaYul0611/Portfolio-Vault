@@ -52,10 +52,11 @@ router.get('/', async function(req, res) {
 
 /* 생성 */
 router.post('/', async function(req, res) {
+  var category = (req.body.category || '메모').trim();
   var result = await db.from('vault_notes').insert({
     user_id: req.session.userId,
-    category: req.body.category || '메모',
-    title: req.body.title || '',
+    category: category || '메모',
+    title: (req.body.title || '').trim(),
     content: req.body.content || ''
   }).select().single();
   res.json(result.data);
@@ -63,10 +64,11 @@ router.post('/', async function(req, res) {
 
 /* 수정 — 본인 것만 */
 router.patch('/:id', async function(req, res) {
+  var category = (req.body.category || '메모').trim();
   var result = await db.from('vault_notes').update({
-    title: req.body.title,
-    content: req.body.content,
-    category: req.body.category
+    title: (req.body.title || '').trim(),
+    content: req.body.content || '',
+    category: category || '메모'
   }).eq('id', req.params.id).eq('user_id', req.session.userId).select().single();
   if (!result.data) return res.status(403).json({ error: '접근 권한이 없습니다.' });
   res.json(result.data);

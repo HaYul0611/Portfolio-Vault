@@ -1,4 +1,4 @@
-﻿/* ===========================
+/* ===========================
    Base / Reset
    =========================== */
 *,
@@ -1278,4 +1278,35 @@ a.evidence-item {
   .notes-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* 카테고리 필터 바 */
+.category-filter-bar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.cat-chip {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cat-chip:hover {
+  border-color: var(--text);
+  color: var(--text);
+}
+
+.cat-chip.active {
+  background: var(--text);
+  color: #fff;
+  border-color: var(--text);
 }

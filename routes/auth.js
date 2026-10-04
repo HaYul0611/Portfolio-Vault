@@ -315,6 +315,13 @@ router.patch('/credentials/:id', async function(req, res) {
 /* === 패스키 삭제 === */
 router.delete('/credentials/:id', async function(req, res) {
   if (!req.session || !req.session.userId) return res.status(401).json({ error: '인증 필요' });
+
+  /* 마지막 패스키 삭제 방어 (T08-C46: 패스키가 모두 삭제되면 계정 영구 잠김 방지) */
+  var countRes = await db.from('vault_credentials').select('id', { count: 'exact', head: true }).eq('user_id', req.session.userId);
+  if (countRes.count <= 1) {
+    return res.status(400).json({ error: '마지막 남은 패스키는 삭제할 수 없습니다. 패스키가 모두 삭제되면 계정에 영구적으로 접근할 수 없게 됩니다.' });
+  }
+
   await db.from('vault_credentials').delete()
     .eq('id', req.params.id).eq('user_id', req.session.userId);
   res.json({ ok: true });

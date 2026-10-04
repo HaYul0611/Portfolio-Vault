@@ -33,44 +33,135 @@ var Vault = (function() {
     notesEl.innerHTML = '';
   }
 
-  /* 비공개 메모 목록 */
-  async function loadNotes() {
-    var notes = await api('/api/notes');
-    if (notes.length === 0) {
-      notesEl.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:24px">아직 메모가 없습니다.</p>';
+  var cachedNotes = [];
+  var activeCategory = 'ALL';
+
+  function getAllCategories() {
+    var defaultCats = ['프로젝트', '취업/이력서', '회고', '학습/연구'];
+    var set = new Set(defaultCats);
+    cachedNotes.forEach(function(n) {
+      if (n.category && n.category.trim()) set.add(n.category.trim());
+    });
+    return Array.from(set);
+  }
+
+  /* 카테고리 필터 바 렌더링 */
+  function renderFilterBar() {
+    var filterEl = document.getElementById('categoryFilter');
+    if (!filterEl) return;
+    var cats = ['ALL'].concat(getAllCategories());
+    filterEl.innerHTML = cats.map(function(c) {
+      var isAct = (c === activeCategory) ? ' active' : '';
+      var label = (c === 'ALL') ? '전체 보기' : esc(c);
+      return '<button type="button" class="cat-chip' + isAct + '" onclick="Vault.setFilter(\'' + esc(c).replace(/'/g, "\\'") + '\')">' + label + '</button>';
+    }).join('');
+  }
+
+  function setFilter(cat) {
+    activeCategory = cat;
+    renderFilterBar();
+    renderNotesList();
+  }
+
+  /* 비공개 메모 화면 렌더링 */
+  function renderNotesList() {
+    var filtered = cachedNotes;
+    if (activeCategory !== 'ALL') {
+      filtered = cachedNotes.filter(function(n) { return (n.category || '').trim() === activeCategory; });
+    }
+
+    if (filtered.length === 0) {
+      notesEl.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:32px 16px;grid-column:1/-1">' +
+        (activeCategory === 'ALL' ? '아직 등록된 메모가 없습니다.' : '선택한 카테고리에 해당하는 메모가 없습니다.') + '</p>';
       return;
     }
-    notesEl.innerHTML = notes.map(function(n) {
+
+    notesEl.innerHTML = filtered.map(function(n) {
       return '<div class="note-card">' +
         '<div class="note-cat">' + esc(n.category) + '</div>' +
         '<div class="note-title">' + esc(n.title) + '</div>' +
         '<div class="note-content">' + esc(n.content) + '</div>' +
         '<div class="note-actions">' +
-          '<button class="v-btn outline sm" onclick="Vault.editNote(\'' + n.id + '\',\'' + esc(n.category) + '\',\'' + esc(n.title).replace(/'/g, "\\'") + '\')">수정</button>' +
+          '<button class="v-btn outline sm" onclick="Vault.editNote(\'' + n.id + '\')">수정</button>' +
           '<button class="v-btn danger sm" onclick="Vault.deleteNote(\'' + n.id + '\')">삭제</button>' +
         '</div></div>';
     }).join('');
   }
 
+  /* 비공개 메모 목록 조회 */
+  async function loadNotes() {
+    var notes = await api('/api/notes');
+    cachedNotes = notes || [];
+    renderFilterBar();
+    renderNotesList();
+  }
+
+  /* 모달 내 카테고리 HTML 빌더 */
+  function buildCategorySelectHtml(currentCat) {
+    var cats = getAllCategories();
+    var isCustom = currentCat && !cats.includes(currentCat);
+    if (isCustom) cats.push(currentCat);
+
+    var optionsHtml = cats.map(function(c) {
+      var selected = (c === currentCat) ? ' selected' : '';
+      return '<option value="' + esc(c) + '"' + selected + '>' + esc(c) + '</option>';
+    }).join('');
+
+    optionsHtml += '<option value="__NEW__">➕ 새 카테고리 직접 입력...</option>';
+
+    var showInput = (currentCat === '__NEW__' || isCustom) ? 'block' : 'none';
+    var customVal = isCustom ? esc(currentCat) : '';
+
+    return '<div class="form-group">' +
+      '<label>카테고리</label>' +
+      '<select id="catSelect" class="v-input" onchange="Vault.onCatSelectChange(this)" style="margin-bottom:8px">' +
+        optionsHtml +
+      '</select>' +
+      '<input type="text" id="customCatInput" class="v-input" placeholder="새로운 카테고리 이름을 입력하세요" value="' + customVal + '" style="display:' + showInput + '">' +
+    '</div>';
+  }
+
+  function onCatSelectChange(sel) {
+    var customInput = document.getElementById('customCatInput');
+    if (sel.value === '__NEW__') {
+      customInput.style.display = 'block';
+      customInput.required = true;
+      customInput.focus();
+    } else {
+      customInput.style.display = 'none';
+      customInput.required = false;
+    }
+  }
+
   /* 메모 추가 */
   function showAddNote() {
-    openModal('메모 추가', '<form id="noteForm">' +
-      '<div class="form-group"><label>카테고리</label><select class="v-input" name="category">' +
-        '<option value="면접 대비 노트">면접 대비 노트</option>' +
-        '<option value="포트폴리오 개선 TODO">포트폴리오 개선 TODO</option>' +
-        '<option value="학습 로드맵">학습 로드맵</option>' +
-      '</select></div>' +
-      '<div class="form-group"><label>제목</label><input class="v-input" name="title" required></div>' +
-      '<div class="form-group"><label>내용</label><textarea class="v-input" name="content" rows="4" style="resize:vertical"></textarea></div>' +
-      '<button type="submit" class="v-btn primary" style="width:100%;margin-top:8px">저장</button></form>');
+    openModal('새 메모 추가', '<form id="noteForm">' +
+      buildCategorySelectHtml('프로젝트') +
+      '<div class="form-group"><label>제목</label><input class="v-input" name="title" placeholder="메모 제목을 입력하세요" required></div>' +
+      '<div class="form-group"><label>내용</label><textarea class="v-input" name="content" rows="4" placeholder="비공개 메모 내용을 입력하세요" style="resize:vertical"></textarea></div>' +
+      '<button type="submit" class="v-btn primary" style="width:100%;margin-top:8px">저장하기</button></form>');
 
     document.getElementById('noteForm').onsubmit = async function(e) {
       e.preventDefault();
+      var sel = document.getElementById('catSelect');
+      var customInput = document.getElementById('customCatInput');
+      var category = (sel.value === '__NEW__') ? customInput.value.trim() : sel.value.trim();
+      if (!category) {
+        alert('카테고리를 입력하거나 선택해주세요.');
+        return;
+      }
+
       var fd = new FormData(this);
+      var payload = {
+        category: category,
+        title: fd.get('title'),
+        content: fd.get('content')
+      };
+
       await api('/api/notes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(Object.fromEntries(fd))
+        body: JSON.stringify(payload)
       });
       closeModal();
       loadNotes();
@@ -79,27 +170,41 @@ var Vault = (function() {
 
   /* 메모 수정 */
   async function editNote(id) {
-    var notes = await api('/api/notes');
-    var note = notes.find(function(n) { return n.id === id; });
+    var note = cachedNotes.find(function(n) { return n.id === id; });
+    if (!note) {
+      var notes = await api('/api/notes');
+      cachedNotes = notes || [];
+      note = cachedNotes.find(function(n) { return n.id === id; });
+    }
     if (!note) return;
 
     openModal('메모 수정', '<form id="noteForm">' +
-      '<div class="form-group"><label>카테고리</label><select class="v-input" name="category">' +
-        ['면접 대비 노트','포트폴리오 개선 TODO','학습 로드맵'].map(function(c) {
-          return '<option value="' + c + '"' + (note.category === c ? ' selected' : '') + '>' + c + '</option>';
-        }).join('') +
-      '</select></div>' +
+      buildCategorySelectHtml(note.category) +
       '<div class="form-group"><label>제목</label><input class="v-input" name="title" value="' + esc(note.title) + '" required></div>' +
       '<div class="form-group"><label>내용</label><textarea class="v-input" name="content" rows="4" style="resize:vertical">' + esc(note.content) + '</textarea></div>' +
-      '<button type="submit" class="v-btn primary" style="width:100%;margin-top:8px">수정</button></form>');
+      '<button type="submit" class="v-btn primary" style="width:100%;margin-top:8px">수정 저장</button></form>');
 
     document.getElementById('noteForm').onsubmit = async function(e) {
       e.preventDefault();
+      var sel = document.getElementById('catSelect');
+      var customInput = document.getElementById('customCatInput');
+      var category = (sel.value === '__NEW__') ? customInput.value.trim() : sel.value.trim();
+      if (!category) {
+        alert('카테고리를 입력하거나 선택해주세요.');
+        return;
+      }
+
       var fd = new FormData(this);
+      var payload = {
+        category: category,
+        title: fd.get('title'),
+        content: fd.get('content')
+      };
+
       await api('/api/notes/' + id, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(Object.fromEntries(fd))
+        body: JSON.stringify(payload)
       });
       closeModal();
       loadNotes();
@@ -170,6 +275,8 @@ var Vault = (function() {
     editNote: editNote,
     deleteNote: deleteNote,
     renameKey: renameKey,
-    deleteKey: deleteKey
+    deleteKey: deleteKey,
+    setFilter: setFilter,
+    onCatSelectChange: onCatSelectChange
   };
 })();

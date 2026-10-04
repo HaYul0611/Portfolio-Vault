@@ -118,6 +118,13 @@
         document.body.style.overflow = '';
       }
     });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && !modal.hidden) {
+        modal.hidden = true;
+        document.body.style.overflow = '';
+      }
+    });
   }
 
   window.openModal = function(title, html) {

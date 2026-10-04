@@ -41,6 +41,13 @@ app.get('*', function(req, res) {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+/* 전역 에러 핸들러 */
+app.use(function(err, req, res, next) {
+  console.error('[ServerError]', err);
+  if (res.headersSent) return next(err);
+  res.status(err.status || 500).json({ error: err.message || '서버 내부 오류가 발생했습니다.' });
+});
+
 app.listen(PORT, function() {
   console.log('Portfolio-Vault running on port ' + PORT);
 });
