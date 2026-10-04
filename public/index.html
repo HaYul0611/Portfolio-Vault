@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261005_06">
+  <link rel="stylesheet" href="css/style.css?v=20261005_07">
 </head>
 
 <body>
@@ -142,12 +142,17 @@
 
     <hr class="divider">
 
-    <!-- 타임라인 섹션 -->
+    <!-- 타임라인 섹션 (사용자 인터랙티브 단계 지정 지원) -->
     <section class="timeline-section" aria-label="경력 전환 타임라인">
-      <h2 class="section-title">Timeline</h2>
-      <p class="section-slash" aria-hidden="true">/</p>
+      <div class="timeline-header-wrap">
+        <div>
+          <h2 class="section-title">Timeline</h2>
+          <p class="section-slash" aria-hidden="true">/</p>
+        </div>
+        <span class="timeline-interactive-hint">💡 각 단계를 직접 클릭하여 나의 현재 위치를 설정할 수 있습니다. (설정값 자동 저장)</span>
+      </div>
       <div class="timeline" id="careerTimeline">
-        <div class="timeline-item past" tabindex="0">
+        <div class="timeline-item past" data-stage="0" tabindex="0" role="button" aria-label="1단계: 병원 행정">
           <span class="timeline-dot" aria-hidden="true"></span>
           <p class="timeline-period">2019.12 ~ 2026.01</p>
           <p class="timeline-title">병원 행정</p>
@@ -158,7 +163,7 @@
             <span class="time-tag">매뉴얼 표준화</span>
           </div>
         </div>
-        <div class="timeline-item done" tabindex="0">
+        <div class="timeline-item done" data-stage="1" tabindex="0" role="button" aria-label="2단계: 웹 풀스택 이수">
           <span class="timeline-dot" aria-hidden="true"></span>
           <p class="timeline-period">25.12 ~ 26.06</p>
           <p class="timeline-title">웹 풀스택 이수</p>
@@ -169,7 +174,7 @@
             <span class="time-tag">REST API · JWT</span>
           </div>
         </div>
-        <div class="timeline-item current active-track" tabindex="0">
+        <div class="timeline-item current active-track" data-stage="2" tabindex="0" role="button" aria-label="3단계: 인프라 · 보안">
           <span class="timeline-dot current-pulse" aria-hidden="true"></span>
           <p class="timeline-period">26.08 ~ <span class="current-badge">Active</span></p>
           <p class="timeline-title">인프라 · 보안</p>
@@ -180,7 +185,7 @@
             <span class="time-tag highlight">Linux · Network</span>
           </div>
         </div>
-        <div class="timeline-item goal" tabindex="0">
+        <div class="timeline-item goal" data-stage="3" tabindex="0" role="button" aria-label="4단계: 보안 엔지니어">
           <span class="timeline-dot" aria-hidden="true"></span>
           <p class="timeline-period">목표</p>
           <p class="timeline-title">보안 엔지니어</p>
@@ -273,12 +278,21 @@
 
     <hr class="divider">
 
-    <!-- 프로젝트 섹션 -->
+    <!-- 프로젝트 섹션 (동적 인터랙티브 필터 지원) -->
     <section class="projects" aria-label="프로젝트">
-      <h2 class="section-title">Projects</h2>
-      <p class="section-slash" aria-hidden="true">/</p>
-      <div class="project-grid">
-        <div class="project-item">
+      <div class="projects-header-wrap">
+        <div>
+          <h2 class="section-title">Projects</h2>
+          <p class="section-slash" aria-hidden="true">/</p>
+        </div>
+        <div class="project-filter-bar" role="tablist" aria-label="프로젝트 분류 필터">
+          <button type="button" class="proj-chip active" data-filter="all">전체 (3)</button>
+          <button type="button" class="proj-chip" data-filter="team">팀 프로젝트 (1)</button>
+          <button type="button" class="proj-chip" data-filter="platform">플랫폼 / 풀스택 (2)</button>
+        </div>
+      </div>
+      <div class="project-grid" id="projectGrid">
+        <div class="project-item" data-category="team platform">
           <span class="project-num" aria-hidden="true">01</span>
           <h3 class="project-name">
             <a href="https://github.com/rkdwlsdnjs9-prog/Fastival-management-master" target="_blank"
@@ -287,7 +301,7 @@
           <p class="project-desc">축제 올인원 O2O 통합 플랫폼</p>
           <p class="project-tag">팀 프로젝트</p>
         </div>
-        <div class="project-item">
+        <div class="project-item" data-category="platform">
           <span class="project-num" aria-hidden="true">02</span>
           <h3 class="project-name">
             <a href="https://github.com/HaYul0611/WeddingPlatform" target="_blank"
@@ -296,7 +310,7 @@
           <p class="project-desc">웨딩 올인원 통합 플랫폼</p>
           <p class="project-meta">컨설팅 · 모바일 청첩장 · 뷰티/헬스케어 · CRM</p>
         </div>
-        <div class="project-item">
+        <div class="project-item" data-category="platform">
           <span class="project-num" aria-hidden="true">03</span>
           <h3 class="project-name">
             <a href="https://github.com/HaYul0611/varo-shopping-mall" target="_blank" rel="noopener noreferrer">VARO</a>
@@ -344,11 +358,14 @@
               <h4 class="detail-title" id="visionStepTitle">AI 실시간 분석 (Real-time Anomaly Detection)</h4>
             </div>
             <p class="detail-desc" id="visionStepDesc">수집된 패킷 및 시스템 로그 벡터를 사전 학습된 머신러닝 이상치 탐지 모델(Isolation Forest / AutoEncoder)로 실시간 추론하여 제로데이 공격 및 비정상 접근 패턴을 즉시 식별합니다.</p>
-            <div class="detail-tags" id="visionStepTags">
-              <span class="detail-tag">Machine Learning</span>
-              <span class="detail-tag">Anomaly Detection</span>
-              <span class="detail-tag">AutoEncoder</span>
-              <span class="detail-tag">Real-time Inference</span>
+            <div class="detail-footer">
+              <div class="detail-tags" id="visionStepTags">
+                <span class="detail-tag">Machine Learning</span>
+                <span class="detail-tag">Anomaly Detection</span>
+                <span class="detail-tag">AutoEncoder</span>
+                <span class="detail-tag">Real-time Inference</span>
+              </div>
+              <button type="button" id="setVisionFocusBtn" class="v-btn outline sm focus-action-btn">🎯 나의 주력 연구 분야로 설정</button>
             </div>
           </div>
         </div>
@@ -463,8 +480,16 @@
         <!-- 비공개 메모 영역 -->
         <div class="notes-section">
           <div class="notes-header">
-            <h3 class="notes-header-title">비공개 자료 및 연구 메모</h3>
+            <div class="notes-header-left">
+              <h3 class="notes-header-title">비공개 자료 및 연구 메모</h3>
+              <div class="vault-stats-bar" id="vaultStatsBar"></div>
+            </div>
             <div class="notes-header-actions">
+              <select id="noteSortSelect" class="v-input sort-select" aria-label="메모 정렬">
+                <option value="latest">최신순</option>
+                <option value="oldest">오래된순</option>
+                <option value="title">제목순</option>
+              </select>
               <div class="search-box-wrap">
                 <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <circle cx="11" cy="11" r="8"></circle>
@@ -506,9 +531,9 @@
   </footer>
 
   <script src="https://unpkg.com/@simplewebauthn/browser@11/dist/bundle/index.umd.min.js"></script>
-  <script src="js/main.js?v=20261005_06"></script>
-  <script src="js/auth.js?v=20261005_06"></script>
-  <script src="js/vault.js?v=20261005_06"></script>
+  <script src="js/main.js?v=20261005_07"></script>
+  <script src="js/auth.js?v=20261005_07"></script>
+  <script src="js/vault.js?v=20261005_07"></script>
 </body>
 
 </html>

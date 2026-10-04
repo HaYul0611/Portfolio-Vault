@@ -79,6 +79,7 @@ var Vault = (function() {
   var cachedNotes = [];
   var activeCategory = 'ALL';
   var searchQuery = '';
+  var sortOrder = 'latest';
 
   function getAllCategories() {
     var defaultCats = ['프로젝트', '취업/이력서', '회고', '학습/연구'];
@@ -183,9 +184,21 @@ var Vault = (function() {
     await loadNotes();
   }
 
-  /* 비공개 메모 화면 렌더링 (카테고리 필터 + 실시간 검색 연동) */
+  /* 비공개 메모 통계 바 렌더링 */
+  function updateStatsBar() {
+    var bar = document.getElementById('vaultStatsBar');
+    if (!bar) return;
+    var totalNotes = cachedNotes.length;
+    var cats = getAllCategories().length;
+    bar.innerHTML = '<span class="v-stat-item">📝 총 메모 <strong>' + totalNotes + '</strong>개</span>' +
+      '<span>·</span>' +
+      '<span class="v-stat-item">📁 카테고리 <strong>' + cats + '</strong>개</span>';
+  }
+
+  /* 비공개 메모 화면 렌더링 (카테고리 필터 + 실시간 검색 + 정렬 연동) */
   function renderNotesList() {
-    var filtered = cachedNotes;
+    updateStatsBar();
+    var filtered = cachedNotes.slice();
     if (activeCategory !== 'ALL') {
       filtered = filtered.filter(function(n) { return (n.category || '').trim() === activeCategory; });
     }
@@ -196,6 +209,15 @@ var Vault = (function() {
                (n.content || '').toLowerCase().includes(q) ||
                (n.category || '').toLowerCase().includes(q);
       });
+    }
+
+    // Dynamic sort
+    if (sortOrder === 'latest') {
+      filtered.sort(function(a, b) { return new Date(b.created_at || 0) - new Date(a.created_at || 0); });
+    } else if (sortOrder === 'oldest') {
+      filtered.sort(function(a, b) { return new Date(a.created_at || 0) - new Date(b.created_at || 0); });
+    } else if (sortOrder === 'title') {
+      filtered.sort(function(a, b) { return (a.title || '').localeCompare(b.title || ''); });
     }
 
     if (filtered.length === 0) {
@@ -400,6 +422,15 @@ var Vault = (function() {
   if (searchEl) {
     searchEl.addEventListener('input', function() {
       searchQuery = this.value.trim();
+      renderNotesList();
+    });
+  }
+
+  /* 메모 정렬 리스너 */
+  var sortEl = document.getElementById('noteSortSelect');
+  if (sortEl) {
+    sortEl.addEventListener('change', function() {
+      sortOrder = this.value;
       renderNotesList();
     });
   }

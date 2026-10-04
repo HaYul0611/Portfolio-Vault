@@ -1708,3 +1708,139 @@ a.evidence-item {
   50% { box-shadow: 0 0 0 3px var(--bg), 0 0 0 8px rgba(46, 204, 113, 0.4), 0 0 12px rgba(46, 204, 113, 0.3); }
   100% { box-shadow: 0 0 0 3px var(--bg), 0 0 0 4px #2ecc71; }
 }
+
+
+/* === 사용자 인터랙티브 설정 & 필터 스타일 === */
+
+/* 타임라인 헤더 및 사용자 인터랙티브 단계 힌트 */
+.timeline-header-wrap {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.timeline-interactive-hint {
+  font-size: 11px;
+  color: var(--text-light);
+  letter-spacing: 0.2px;
+}
+
+.timeline-item {
+  cursor: pointer !important;
+}
+
+.timeline-item:focus {
+  outline: 1px dashed var(--text-mid);
+  outline-offset: 4px;
+}
+
+/* 프로젝트 인터랙티브 필터 */
+.projects-header-wrap {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.project-filter-bar {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.proj-chip {
+  background: transparent;
+  border: 0.5px solid var(--border);
+  padding: 5px 12px;
+  font-size: 11px;
+  font-family: inherit;
+  color: var(--text-mid);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.proj-chip:hover {
+  border-color: var(--text);
+  color: var(--text);
+}
+
+.proj-chip.active {
+  background: var(--text);
+  color: var(--bg);
+  border-color: var(--text);
+  font-weight: 600;
+}
+
+.project-item.hidden-proj {
+  display: none !important;
+}
+
+/* Vision 아키텍처 연구 분야 지정 버튼 */
+.detail-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 0.5px solid var(--border);
+}
+
+.focus-action-btn {
+  font-size: 11px !important;
+  padding: 5px 12px !important;
+  height: 30px !important;
+  letter-spacing: 0.2px;
+}
+
+.node-focus-tag {
+  font-size: 9px;
+  padding: 1px 4px;
+  border-radius: 2px;
+  background: #2ecc71;
+  color: #fff;
+  font-weight: 700;
+  margin-left: 4px;
+}
+
+/* Vault 통계 및 정렬 바 */
+.notes-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.vault-stats-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  color: var(--text-light);
+}
+
+.v-stat-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.v-stat-item strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.sort-select {
+  height: 36px !important;
+  width: auto !important;
+  padding: 0 10px !important;
+  margin: 0 !important;
+  font-size: 12px !important;
+  cursor: pointer;
+}

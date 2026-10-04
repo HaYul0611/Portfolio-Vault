@@ -223,12 +223,145 @@
     }
   }
 
+  var currentActiveIdx = 1;
+  var focusBtn = document.getElementById('setVisionFocusBtn');
+
+  function updateFocusBadge(focusIdx) {
+    nodes.forEach(function (node, i) {
+      var existing = node.querySelector('.node-focus-tag');
+      if (existing) existing.remove();
+      if (i === focusIdx) {
+        var tag = document.createElement('span');
+        tag.className = 'node-focus-tag';
+        tag.textContent = '★ Focus';
+        node.appendChild(tag);
+      }
+    });
+  }
+
+  // Restore saved focus
+  var savedFocus = 1;
+  try {
+    var stored = localStorage.getItem('portfolio_vision_focus');
+    if (stored !== null) savedFocus = parseInt(stored, 10);
+  } catch (e) {}
+  if (!isNaN(savedFocus)) {
+    updateFocusBadge(savedFocus);
+    setActiveStep(savedFocus);
+  }
+
+  if (focusBtn) {
+    focusBtn.addEventListener('click', function () {
+      try {
+        localStorage.setItem('portfolio_vision_focus', currentActiveIdx);
+      } catch (e) {}
+      updateFocusBadge(currentActiveIdx);
+      this.textContent = '✓ 주력 연구 분야 설정 완료';
+      var self = this;
+      setTimeout(function () {
+        self.textContent = '🎯 나의 주력 연구 분야로 설정';
+      }, 1500);
+    });
+  }
+
   nodes.forEach(function (node) {
     node.addEventListener('click', function () {
       var step = parseInt(this.getAttribute('data-step'), 10);
       if (!isNaN(step)) {
+        currentActiveIdx = step;
         setActiveStep(step);
       }
+    });
+  });
+})();
+
+
+/* ===========================
+   Timeline User Stage Controller (타임라인 단계 직접 지정)
+   =========================== */
+(function initTimelineStageController() {
+  var timelineEl = document.getElementById('careerTimeline');
+  if (!timelineEl) return;
+  var items = timelineEl.querySelectorAll('.timeline-item');
+  if (!items.length) return;
+
+  function applyStage(targetIdx) {
+    items.forEach(function (item, idx) {
+      var dot = item.querySelector('.timeline-dot');
+      var badge = item.querySelector('.current-badge');
+      if (badge) badge.remove();
+
+      item.classList.remove('past', 'done', 'current', 'goal', 'active-track');
+      if (dot) dot.classList.remove('current-pulse');
+
+      if (idx < targetIdx) {
+        item.classList.add('done');
+      } else if (idx === targetIdx) {
+        item.classList.add('current', 'active-track');
+        if (dot) dot.classList.add('current-pulse');
+        var period = item.querySelector('.timeline-period');
+        if (period) {
+          var span = document.createElement('span');
+          span.className = 'current-badge';
+          span.textContent = 'Active';
+          period.appendChild(span);
+        }
+      } else {
+        item.classList.add('goal');
+      }
+    });
+
+    try {
+      localStorage.setItem('portfolio_timeline_stage', targetIdx);
+    } catch (e) {}
+  }
+
+  // Restore saved stage or default to 2 (인프라 · 보안)
+  var saved = 2;
+  try {
+    var stored = localStorage.getItem('portfolio_timeline_stage');
+    if (stored !== null) saved = parseInt(stored, 10);
+  } catch (e) {}
+  if (isNaN(saved) || saved < 0 || saved >= items.length) saved = 2;
+  applyStage(saved);
+
+  // Click & Keydown listeners
+  items.forEach(function (item, idx) {
+    item.addEventListener('click', function () {
+      applyStage(idx);
+    });
+    item.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        applyStage(idx);
+      }
+    });
+  });
+})();
+
+/* ===========================
+   Projects Filter (프로젝트 카테고리 필터)
+   =========================== */
+(function initProjectFilters() {
+  var chips = document.querySelectorAll('.proj-chip');
+  var items = document.querySelectorAll('#projectGrid .project-item');
+  if (!chips.length || !items.length) return;
+
+  chips.forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      chips.forEach(function (c) { c.classList.remove('active'); });
+      chip.classList.add('active');
+      var filter = chip.getAttribute('data-filter');
+
+      items.forEach(function (item) {
+        var cat = item.getAttribute('data-category') || '';
+        if (filter === 'all' || cat.includes(filter)) {
+          item.classList.remove('hidden-proj');
+          item.style.animation = 'cardFadeIn 0.25s ease-out';
+        } else {
+          item.classList.add('hidden-proj');
+        }
+      });
     });
   });
 })();
