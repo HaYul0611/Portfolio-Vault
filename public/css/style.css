@@ -1425,3 +1425,27 @@ a.evidence-item {
   color: #fff;
   border-color: var(--text);
 }
+/* 모달 & 카드 진입 애니메이션 */
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: translateY(8px) scale(0.99); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.vault-modal-content, .modal-content {
+  animation: modalFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes cardFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.note-card {
+  animation: cardFadeIn 0.25s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vault-modal-content, .modal-content, .note-card {
+    animation: none !important;
+  }
+}

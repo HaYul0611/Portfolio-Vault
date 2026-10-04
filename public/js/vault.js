@@ -96,7 +96,8 @@ var Vault = (function() {
     var cats = ['ALL'].concat(getAllCategories());
     var chipsHtml = cats.map(function(c) {
       var isAct = (c === activeCategory) ? ' active' : '';
-      var label = (c === 'ALL') ? '전체 보기' : esc(c);
+      var count = (c === 'ALL') ? cachedNotes.length : cachedNotes.filter(function(n) { return (n.category || '').trim() === c; }).length;
+      var label = (c === 'ALL') ? '전체 보기 (' + count + ')' : esc(c) + ' (' + count + ')';
       return '<button type="button" class="cat-chip' + isAct + '" onclick="Vault.setFilter(\'' + esc(c).replace(/'/g, "\\'") + '\')">' + label + '</button>';
     }).join('');
 
@@ -130,7 +131,7 @@ var Vault = (function() {
       '<div style="border-top:0.5px solid var(--border);padding-top:16px">' +
         '<label style="display:block;font-size:12px;font-weight:600;margin-bottom:8px">새 카테고리 생성</label>' +
         '<div class="new-category-row">' +
-          '<input type="text" id="newCategoryInputName" class="v-input new-category-input" placeholder="새 카테고리 이름">' +
+          '<input type="text" id="newCategoryInputName" class="v-input new-category-input" placeholder="새 카테고리 이름" onkeydown="if(event.key===\'Enter\'){event.preventDefault();Vault.createNewCategory();}">' +
           '<button type="button" class="v-btn primary new-category-btn" onclick="Vault.createNewCategory()">생성</button>' +
         '</div>' +
       '</div></div>';
@@ -210,6 +211,7 @@ var Vault = (function() {
         '<div class="note-title">' + esc(n.title) + '</div>' +
         '<div class="note-content">' + esc(n.content) + '</div>' +
         '<div class="note-actions">' +
+          '<button class="v-btn outline sm" onclick="Vault.copyNote(\'' + n.id + '\', this)">복사</button>' +
           '<button class="v-btn outline sm" onclick="Vault.editNote(\'' + n.id + '\')">수정</button>' +
           '<button class="v-btn danger sm" onclick="Vault.deleteNote(\'' + n.id + '\')">삭제</button>' +
         '</div></div>';
@@ -407,6 +409,25 @@ var Vault = (function() {
     if (me.authenticated) onLogin();
   });
 
+
+  /* 메모 내용 클립보드 복사 */
+  function copyNote(id, btn) {
+    var note = cachedNotes.find(function(n) { return n.id === id; });
+    if (!note) return;
+    var text = '[' + note.category + '] ' + note.title + '\n\n' + note.content;
+    navigator.clipboard.writeText(text).then(function() {
+      var orig = btn.textContent;
+      btn.textContent = '✓ 복사됨';
+      btn.style.color = '#5cb85c';
+      setTimeout(function() {
+        btn.textContent = orig;
+        btn.style.color = '';
+      }, 1500);
+    }).catch(function() {
+      showAlert('복사 안내', '클립보드 복사에 실패했습니다.');
+    });
+  }
+
   return {
     onLogin: onLogin,
     onLogout: onLogout,
@@ -420,6 +441,7 @@ var Vault = (function() {
     showManageCategories: showManageCategories,
     renameCategory: renameCategory,
     deleteCategory: deleteCategory,
-    createNewCategory: createNewCategory
+    createNewCategory: createNewCategory,
+    copyNote: copyNote
   };
 })();
